@@ -1,0 +1,46 @@
+spring:
+  profiles: prod
+
+# 设置日志的路径，在logback-spring.xml中引用了此属性作为日志文件路径
+logging:
+  file:
+    path: ${LOGGING_FILE_PATH}
+
+datasource:
+  default:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/dd_monitor?${datasource.common.url-variables}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  trace:
+    mysql:
+      url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}?${datasource.common.url-variables}
+      username: ${MYSQL_USERNAME}
+      password: ${MYSQL_PASSWORD}
+      maxActive: 20
+  geo-library:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}?${datasource.common.url-variables}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    maxActive: 20
+  gpslog:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}?${datasource.common.url-variables}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    maxActive: 10
+
+redis:
+  core:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DB}
+  geo-cache:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DB}
+  lbs-key:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DB}

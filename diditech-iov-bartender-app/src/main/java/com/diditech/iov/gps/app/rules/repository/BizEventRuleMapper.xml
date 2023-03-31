@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.diditech.iov.gps.app.rules.repository.BizEventRuleMapper">
+
+    <!-- 通用Schema -->
+    <sql id="schemaName">
+        dd_monitor.
+    </sql>
+
+
+    <select id="countByRuleId" resultType="int">
+        SELECT COUNT(ID)
+        FROM<include refid="schemaName"/>event_rule
+        WHERE ID = #{ruleId}
+        AND CLIENT_ID = #{clientId}
+        AND ISDEL = 0
+    </select>
+</mapper>

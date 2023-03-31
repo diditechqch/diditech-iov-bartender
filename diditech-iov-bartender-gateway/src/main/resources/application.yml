@@ -1,0 +1,43 @@
+server:
+  port: 9000
+
+spring:
+  profiles:
+    active: dev
+---
+
+logging:
+  file:
+    path: ${LOGGING_FILE_PATH}
+
+## gateway
+spring:
+  cloud.gateway.routes:
+    - id: auth-service-route
+      uri: ${AUTH_SERVICE_HOST}
+      predicates:
+        - Path=/auth/**
+      filters:
+        - StripPrefix=1
+    - id: api-service-route
+      uri: ${API_SERVICE_HOST}
+      predicates:
+        - Path=/api/**
+      filters:
+        - StripPrefix=1
+  security.oauth2.resourceserver.jwt.jwk-set-uri: 'http://${AUTH_SERVICE_HOST}/.well-known/jwks.json'
+  profiles: prod
+
+## white list
+secure:
+  ignore:
+    urls: #配置白名单路径
+      - "/actuator/**"
+      - "/auth/oauth/token"
+      - "/api/no-auth"
+      - "/api/opt/**"
+      - "/api/devices/syn"
+    ips:
+      - 0:0:0:0:0:0:0:1
+      - 192.168.1.1
+      - 127.0.0.1

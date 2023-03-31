@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.gpslog.repository.GpsLogMapper">
+
+    <select id="loadGpsLogTableListFromDb" resultType="java.lang.String">
+        SELECT CONCAT_WS( '.', TABLE_SCHEMA, TABLE_NAME ) TNAME
+        FROM INFORMATION_SCHEMA.`TABLES` T
+        WHERE TABLE_SCHEMA LIKE CONCAT(#{schema},'%')
+        AND lower( TABLE_NAME ) &gt;= #{beginTableName}
+        AND lower( TABLE_NAME ) &lt;= #{endTableName}
+        ORDER BY TNAME
+    </select>
+
+    <select id="getGpsLogList" resultType="com.diditech.iov.gps.api.gpslog.domain.GpsLog">
+        SELECT
+  			DEVICE_NUM AS deviceNum,
+  			DEVICE_TYPE AS protocolType,
+		  	CREATE_TIME AS createTime,
+  			GPS_TIME AS gpsTime,
+  			MESSAGE AS message,
+  			REPLY_MESSAGE AS replyMessage,
+  			PROTOCOL_TYPE AS packageType
+  		FROM
+  			${tableName}
+  		WHERE
+  			DEVICE_NUM = #{deviceNum}
+  		AND
+  			CREATE_TIME &gt;= #{beginTime}
+  		AND
+  			CREATE_TIME &lt; #{endTime}
+    </select>
+
+</mapper>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.device.repository.BizDeviceMapper">
+  <resultMap id="BaseResultMap" type="com.diditech.iov.gps.app.device.po.BizDevice">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="DEVICE_NUM" jdbcType="VARCHAR" property="deviceNum" />
+    <result column="CATEGORY_ID" jdbcType="INTEGER" property="categoryId" />
+    <result column="WIFI_FLAG" jdbcType="TINYINT" property="wifiFlag" />
+    <result column="LBS_ENABLE" jdbcType="TINYINT" property="lbsEnable" />
+    <result column="TIMEOUT_THRESHOLD" jdbcType="INTEGER" property="timeoutThreshold" />
+    <result column="ISENABLE" jdbcType="TINYINT" property="isenable" />
+    <result column="ISDEL" jdbcType="TINYINT" property="isdel" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="CLIENT_ID" jdbcType="VARCHAR" property="clientId" />
+    <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, DEVICE_NUM, CATEGORY_ID, WIFI_FLAG, LBS_ENABLE, TIMEOUT_THRESHOLD, ISENABLE, 
+    ISDEL, CREATE_TIME, UPDATE_TIME, CLIENT_ID, TENANT_ID
+  </sql>
+  <select id="selectByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dd_monitor.biz_device
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceExample">
+    delete from dd_monitor.biz_device
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.diditech.iov.gps.app.device.po.BizDevice">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.biz_device (DEVICE_NUM, CATEGORY_ID, WIFI_FLAG, 
+      LBS_ENABLE, TIMEOUT_THRESHOLD, ISENABLE, 
+      ISDEL, CREATE_TIME, UPDATE_TIME, 
+      CLIENT_ID, TENANT_ID)
+    values (#{deviceNum,jdbcType=VARCHAR}, #{categoryId,jdbcType=INTEGER}, #{wifiFlag,jdbcType=TINYINT}, 
+      #{lbsEnable,jdbcType=TINYINT}, #{timeoutThreshold,jdbcType=INTEGER}, #{isenable,jdbcType=TINYINT}, 
+      #{isdel,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{clientId,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.diditech.iov.gps.app.device.po.BizDevice">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.biz_device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceNum != null">
+        DEVICE_NUM,
+      </if>
+      <if test="categoryId != null">
+        CATEGORY_ID,
+      </if>
+      <if test="wifiFlag != null">
+        WIFI_FLAG,
+      </if>
+      <if test="lbsEnable != null">
+        LBS_ENABLE,
+      </if>
+      <if test="timeoutThreshold != null">
+        TIMEOUT_THRESHOLD,
+      </if>
+      <if test="isenable != null">
+        ISENABLE,
+      </if>
+      <if test="isdel != null">
+        ISDEL,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID,
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceNum != null">
+        #{deviceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="wifiFlag != null">
+        #{wifiFlag,jdbcType=TINYINT},
+      </if>
+      <if test="lbsEnable != null">
+        #{lbsEnable,jdbcType=TINYINT},
+      </if>
+      <if test="timeoutThreshold != null">
+        #{timeoutThreshold,jdbcType=INTEGER},
+      </if>
+      <if test="isenable != null">
+        #{isenable,jdbcType=TINYINT},
+      </if>
+      <if test="isdel != null">
+        #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceExample" resultType="java.lang.Long">
+    select count(*) from dd_monitor.biz_device
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dd_monitor.biz_device
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.deviceNum != null">
+        DEVICE_NUM = #{record.deviceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryId != null">
+        CATEGORY_ID = #{record.categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="record.wifiFlag != null">
+        WIFI_FLAG = #{record.wifiFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.lbsEnable != null">
+        LBS_ENABLE = #{record.lbsEnable,jdbcType=TINYINT},
+      </if>
+      <if test="record.timeoutThreshold != null">
+        TIMEOUT_THRESHOLD = #{record.timeoutThreshold,jdbcType=INTEGER},
+      </if>
+      <if test="record.isenable != null">
+        ISENABLE = #{record.isenable,jdbcType=TINYINT},
+      </if>
+      <if test="record.isdel != null">
+        ISDEL = #{record.isdel,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.clientId != null">
+        CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null">
+        TENANT_ID = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dd_monitor.biz_device
+    set ID = #{record.id,jdbcType=INTEGER},
+      DEVICE_NUM = #{record.deviceNum,jdbcType=VARCHAR},
+      CATEGORY_ID = #{record.categoryId,jdbcType=INTEGER},
+      WIFI_FLAG = #{record.wifiFlag,jdbcType=TINYINT},
+      LBS_ENABLE = #{record.lbsEnable,jdbcType=TINYINT},
+      TIMEOUT_THRESHOLD = #{record.timeoutThreshold,jdbcType=INTEGER},
+      ISENABLE = #{record.isenable,jdbcType=TINYINT},
+      ISDEL = #{record.isdel,jdbcType=TINYINT},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      TENANT_ID = #{record.tenantId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diditech.iov.gps.app.device.po.BizDevice">
+    update dd_monitor.biz_device
+    <set>
+      <if test="deviceNum != null">
+        DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        CATEGORY_ID = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="wifiFlag != null">
+        WIFI_FLAG = #{wifiFlag,jdbcType=TINYINT},
+      </if>
+      <if test="lbsEnable != null">
+        LBS_ENABLE = #{lbsEnable,jdbcType=TINYINT},
+      </if>
+      <if test="timeoutThreshold != null">
+        TIMEOUT_THRESHOLD = #{timeoutThreshold,jdbcType=INTEGER},
+      </if>
+      <if test="isenable != null">
+        ISENABLE = #{isenable,jdbcType=TINYINT},
+      </if>
+      <if test="isdel != null">
+        ISDEL = #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID = #{tenantId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diditech.iov.gps.app.device.po.BizDevice">
+    update dd_monitor.biz_device
+    set DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR},
+      CATEGORY_ID = #{categoryId,jdbcType=INTEGER},
+      WIFI_FLAG = #{wifiFlag,jdbcType=TINYINT},
+      LBS_ENABLE = #{lbsEnable,jdbcType=TINYINT},
+      TIMEOUT_THRESHOLD = #{timeoutThreshold,jdbcType=INTEGER},
+      ISENABLE = #{isenable,jdbcType=TINYINT},
+      ISDEL = #{isdel,jdbcType=TINYINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

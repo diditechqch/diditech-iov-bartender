@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.device.repository.BizDeviceCategoryMapper">
+  <resultMap id="BaseResultMap" type="com.diditech.iov.gps.app.device.po.BizDeviceCategory">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="CATEGORY_NO" jdbcType="VARCHAR" property="categoryNo" />
+    <result column="CATEGORY_NO_SHORT" jdbcType="VARCHAR" property="categoryNoShort" />
+    <result column="MILEAGE_TYPE" jdbcType="TINYINT" property="mileageType" />
+    <result column="OBD_FLAG" jdbcType="TINYINT" property="obdFlag" />
+    <result column="WIFI_FLAG" jdbcType="TINYINT" property="wifiFlag" />
+    <result column="ISDEL" jdbcType="TINYINT" property="isdel" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, CATEGORY_NO, CATEGORY_NO_SHORT, MILEAGE_TYPE, OBD_FLAG, WIFI_FLAG, ISDEL, CREATE_TIME, 
+    UPDATE_TIME
+  </sql>
+  <select id="selectByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCategoryExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device_category
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device_category
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dd_monitor.biz_device_category
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCategoryExample">
+    delete from dd_monitor.biz_device_category
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCategory">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.biz_device_category (CATEGORY_NO, CATEGORY_NO_SHORT, MILEAGE_TYPE, 
+      OBD_FLAG, WIFI_FLAG, ISDEL, 
+      CREATE_TIME, UPDATE_TIME)
+    values (#{categoryNo,jdbcType=VARCHAR}, #{categoryNoShort,jdbcType=VARCHAR}, #{mileageType,jdbcType=TINYINT}, 
+      #{obdFlag,jdbcType=TINYINT}, #{wifiFlag,jdbcType=TINYINT}, #{isdel,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCategory">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.biz_device_category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="categoryNo != null">
+        CATEGORY_NO,
+      </if>
+      <if test="categoryNoShort != null">
+        CATEGORY_NO_SHORT,
+      </if>
+      <if test="mileageType != null">
+        MILEAGE_TYPE,
+      </if>
+      <if test="obdFlag != null">
+        OBD_FLAG,
+      </if>
+      <if test="wifiFlag != null">
+        WIFI_FLAG,
+      </if>
+      <if test="isdel != null">
+        ISDEL,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="categoryNo != null">
+        #{categoryNo,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryNoShort != null">
+        #{categoryNoShort,jdbcType=VARCHAR},
+      </if>
+      <if test="mileageType != null">
+        #{mileageType,jdbcType=TINYINT},
+      </if>
+      <if test="obdFlag != null">
+        #{obdFlag,jdbcType=TINYINT},
+      </if>
+      <if test="wifiFlag != null">
+        #{wifiFlag,jdbcType=TINYINT},
+      </if>
+      <if test="isdel != null">
+        #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCategoryExample" resultType="java.lang.Long">
+    select count(*) from dd_monitor.biz_device_category
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dd_monitor.biz_device_category
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.categoryNo != null">
+        CATEGORY_NO = #{record.categoryNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryNoShort != null">
+        CATEGORY_NO_SHORT = #{record.categoryNoShort,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mileageType != null">
+        MILEAGE_TYPE = #{record.mileageType,jdbcType=TINYINT},
+      </if>
+      <if test="record.obdFlag != null">
+        OBD_FLAG = #{record.obdFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.wifiFlag != null">
+        WIFI_FLAG = #{record.wifiFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.isdel != null">
+        ISDEL = #{record.isdel,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dd_monitor.biz_device_category
+    set ID = #{record.id,jdbcType=INTEGER},
+      CATEGORY_NO = #{record.categoryNo,jdbcType=VARCHAR},
+      CATEGORY_NO_SHORT = #{record.categoryNoShort,jdbcType=VARCHAR},
+      MILEAGE_TYPE = #{record.mileageType,jdbcType=TINYINT},
+      OBD_FLAG = #{record.obdFlag,jdbcType=TINYINT},
+      WIFI_FLAG = #{record.wifiFlag,jdbcType=TINYINT},
+      ISDEL = #{record.isdel,jdbcType=TINYINT},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCategory">
+    update dd_monitor.biz_device_category
+    <set>
+      <if test="categoryNo != null">
+        CATEGORY_NO = #{categoryNo,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryNoShort != null">
+        CATEGORY_NO_SHORT = #{categoryNoShort,jdbcType=VARCHAR},
+      </if>
+      <if test="mileageType != null">
+        MILEAGE_TYPE = #{mileageType,jdbcType=TINYINT},
+      </if>
+      <if test="obdFlag != null">
+        OBD_FLAG = #{obdFlag,jdbcType=TINYINT},
+      </if>
+      <if test="wifiFlag != null">
+        WIFI_FLAG = #{wifiFlag,jdbcType=TINYINT},
+      </if>
+      <if test="isdel != null">
+        ISDEL = #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCategory">
+    update dd_monitor.biz_device_category
+    set CATEGORY_NO = #{categoryNo,jdbcType=VARCHAR},
+      CATEGORY_NO_SHORT = #{categoryNoShort,jdbcType=VARCHAR},
+      MILEAGE_TYPE = #{mileageType,jdbcType=TINYINT},
+      OBD_FLAG = #{obdFlag,jdbcType=TINYINT},
+      WIFI_FLAG = #{wifiFlag,jdbcType=TINYINT},
+      ISDEL = #{isdel,jdbcType=TINYINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCategoryExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device_category
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,115 @@
+server:
+  port: 8012
+spring:
+  profiles:
+    active: dev
+
+# 指定logfile端点的日志位置，有以下两个用途
+# 1.使用actuator的logfile端点访问到日志文件
+# 2.使用spring-boot-admin-server访问到服务的logfile端点，在监控中心查看服务日志
+endpoints:
+  config: logback-spring.xml
+security:
+  basic:
+    enabled: false
+
+# application configuration
+datasource:
+  common:
+    driverClassName: com.mysql.jdbc.Driver
+    initialSize: 1
+    minIdle: 1
+    maxActive: 5
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 5
+    filters: stat,wall
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    url-variables: useUnicode=true&characterEncoding=utf-8&generateSimpleParameterMetadata=true&useSSL=false&serverTimezone=Asia/Shanghai&useLocalSessionState=true
+
+redis:
+  common:
+    timeout: 10000
+    pool:
+      max-idle: 20
+      min-idle: 0
+      max-active: 3000
+      max-wait: -1
+
+# application settings
+client:
+  default:
+    lbs-enable: 0
+    timeout-threshold: 600
+
+gps:
+  redis:
+    prefix:
+      rule: "event-rule:rule:"
+      rule-device: "event-rule:device-to-rule:"
+      rule-client: "event-rule:client-to-rule:"
+      event-rule: "event-rule:event:"
+      lastdevicedata: "lastdevicedata:"
+      event-rule-threshold: "event-rule:threshold:%s:%s"
+
+trace:
+  # 轨迹数据来源 cassandra 或 mysql
+  datasource-flag: mysql
+
+geo:
+  address:
+    batch-thread-num: 20
+    use-local-db: true
+    version: 3.0.0
+    source: monica
+    baidu:
+      keyList:
+        - 3lBS83HG7YYqCf31stUsYHISNCBb2c2a
+      url: http://api.map.baidu.com/reverse_geocoding/v3/?ak=%1$s&output=json&location=%2$s,%3$s&extensions_poi=%4$s&coordtype=%5$s
+      use-poi: true
+      coordtype: gcj02ll
+      distance-unit: 米
+  wifi:
+    # 服务商选择gaode/cellocation, default is gaode
+    service-provider: gaode
+    cellocation:
+      url: http://vip.cellocation.com/loc/gr6je24t.php?cl=%s&wl=%s&coord=gcj02&output=json
+    gaode:
+      imei:
+        min-length: 5
+      mac:
+        min-count: 2
+      key: 65ec4c9579dd0041a73f3770b5444f25
+      url: http://apilocate.amap.com/position?&key=%1$s&accesstype=1&imei=%2$s&macs=%3$s&output=json&cdma=0&bts=%4$s&nearbts=%5$s
+  lbs:
+    gaode:
+      key: 65ec4c9579dd0041a73f3770b5444f25
+      url: http://apilocate.amap.com/position?key=%s&bts=%s&nearbts=%s&accesstype=0&output=json
+
+gpslog:
+  table:
+    schema: gps_log
+    prefix: gps_log_
+    format: yyMM
+
+subscribe:
+  listen:
+    port: 8888
+
+obd:
+  fuel:
+    threshold: 500
+    categoryIds:
+      - 101
+      - 102
+
+quartz:
+  trip:
+    cron: "0 0 1am * * ?"
+    batch-thread-num: 5

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <properties resource="application4mbg.properties"/>
+    <classPathEntry location="${mbg.jdbc.driver-location}"/>
+    <context id="mysql" defaultModelType="conditional" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="${mbg.jdbc.driver-class-name}" connectionURL="${mbg.jdbc.url}"
+                        userId="${mbg.jdbc.username}" password="${mbg.jdbc.password}"/>
+        <javaModelGenerator targetProject="${mbg.target-project.java}" targetPackage="${mbg.target-package.domain}">
+            <property name="enableSubPackages" value="false"/>
+            <!-- <property name="enableSubPackages" value="true"/> -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetProject="${mbg.target-project.resources}" targetPackage="${mbg.target-package.mapper}">
+            <!-- <property name="enableSubPackages" value="true"/> -->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER" targetProject="${mbg.target-project.java}"
+                             targetPackage="${mbg.target-package.mapper}">
+            <!-- <property name="enableSubPackages" value="true"/> -->
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <table tableName="event_area">
+            <property name="runtimeSchema" value="${mbg.schema}"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="event_area_history">
+            <property name="runtimeSchema" value="${mbg.schema}"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="event_rule">
+            <property name="runtimeSchema" value="${mbg.schema}"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="event_rule_area">
+            <property name="runtimeSchema" value="${mbg.schema}"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="event_rule_area_history">
+            <property name="runtimeSchema" value="${mbg.schema}"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="event_rule_device">
+            <property name="runtimeSchema" value="${mbg.schema}"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="client_event_rule">
+            <property name="runtimeSchema" value="${mbg.schema}"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="client_event_type">
+            <property name="runtimeSchema" value="${mbg.schema}"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>

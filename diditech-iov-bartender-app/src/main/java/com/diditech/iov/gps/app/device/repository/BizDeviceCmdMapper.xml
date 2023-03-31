@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.device.repository.BizDeviceCmdMapper">
+  <resultMap id="BaseResultMap" type="com.diditech.iov.gps.app.device.po.BizDeviceCmd">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="DEVICE_NUM" jdbcType="VARCHAR" property="deviceNum" />
+    <result column="CLIENT_ID" jdbcType="VARCHAR" property="clientId" />
+    <result column="CMD_NAME" jdbcType="VARCHAR" property="cmdName" />
+    <result column="CMD" jdbcType="VARCHAR" property="cmd" />
+    <result column="CMD_STR" jdbcType="VARCHAR" property="cmdStr" />
+    <result column="CMD_TIME" jdbcType="TIMESTAMP" property="cmdTime" />
+    <result column="SEND_TIME" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="RESULT" jdbcType="VARCHAR" property="result" />
+    <result column="RESULT_TIME" jdbcType="TIMESTAMP" property="resultTime" />
+    <result column="STATUS" jdbcType="TINYINT" property="status" />
+    <result column="EXE_COUNT" jdbcType="SMALLINT" property="exeCount" />
+    <result column="BAT_ID" jdbcType="INTEGER" property="batId" />
+    <result column="TOKEN_ID" jdbcType="VARCHAR" property="tokenId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, DEVICE_NUM, CLIENT_ID, CMD_NAME, CMD, CMD_STR, CMD_TIME, SEND_TIME, RESULT, RESULT_TIME, 
+    STATUS, EXE_COUNT, BAT_ID, TOKEN_ID
+  </sql>
+  <select id="selectByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCmdExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device_cmd
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device_cmd
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dd_monitor.biz_device_cmd
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCmdExample">
+    delete from dd_monitor.biz_device_cmd
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCmd">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.biz_device_cmd (DEVICE_NUM, CLIENT_ID, CMD_NAME, 
+      CMD, CMD_STR, CMD_TIME, 
+      SEND_TIME, RESULT, RESULT_TIME, 
+      STATUS, EXE_COUNT, BAT_ID, 
+      TOKEN_ID)
+    values (#{deviceNum,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, #{cmdName,jdbcType=VARCHAR}, 
+      #{cmd,jdbcType=VARCHAR}, #{cmdStr,jdbcType=VARCHAR}, #{cmdTime,jdbcType=TIMESTAMP}, 
+      #{sendTime,jdbcType=TIMESTAMP}, #{result,jdbcType=VARCHAR}, #{resultTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT}, #{exeCount,jdbcType=SMALLINT}, #{batId,jdbcType=INTEGER}, 
+      #{tokenId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCmd">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.biz_device_cmd
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceNum != null">
+        DEVICE_NUM,
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID,
+      </if>
+      <if test="cmdName != null">
+        CMD_NAME,
+      </if>
+      <if test="cmd != null">
+        CMD,
+      </if>
+      <if test="cmdStr != null">
+        CMD_STR,
+      </if>
+      <if test="cmdTime != null">
+        CMD_TIME,
+      </if>
+      <if test="sendTime != null">
+        SEND_TIME,
+      </if>
+      <if test="result != null">
+        RESULT,
+      </if>
+      <if test="resultTime != null">
+        RESULT_TIME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="exeCount != null">
+        EXE_COUNT,
+      </if>
+      <if test="batId != null">
+        BAT_ID,
+      </if>
+      <if test="tokenId != null">
+        TOKEN_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceNum != null">
+        #{deviceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="cmdName != null">
+        #{cmdName,jdbcType=VARCHAR},
+      </if>
+      <if test="cmd != null">
+        #{cmd,jdbcType=VARCHAR},
+      </if>
+      <if test="cmdStr != null">
+        #{cmdStr,jdbcType=VARCHAR},
+      </if>
+      <if test="cmdTime != null">
+        #{cmdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="resultTime != null">
+        #{resultTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="exeCount != null">
+        #{exeCount,jdbcType=SMALLINT},
+      </if>
+      <if test="batId != null">
+        #{batId,jdbcType=INTEGER},
+      </if>
+      <if test="tokenId != null">
+        #{tokenId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCmdExample" resultType="java.lang.Long">
+    select count(*) from dd_monitor.biz_device_cmd
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dd_monitor.biz_device_cmd
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.deviceNum != null">
+        DEVICE_NUM = #{record.deviceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clientId != null">
+        CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cmdName != null">
+        CMD_NAME = #{record.cmdName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cmd != null">
+        CMD = #{record.cmd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cmdStr != null">
+        CMD_STR = #{record.cmdStr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cmdTime != null">
+        CMD_TIME = #{record.cmdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sendTime != null">
+        SEND_TIME = #{record.sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.result != null">
+        RESULT = #{record.result,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resultTime != null">
+        RESULT_TIME = #{record.resultTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        STATUS = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.exeCount != null">
+        EXE_COUNT = #{record.exeCount,jdbcType=SMALLINT},
+      </if>
+      <if test="record.batId != null">
+        BAT_ID = #{record.batId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tokenId != null">
+        TOKEN_ID = #{record.tokenId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dd_monitor.biz_device_cmd
+    set ID = #{record.id,jdbcType=INTEGER},
+      DEVICE_NUM = #{record.deviceNum,jdbcType=VARCHAR},
+      CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      CMD_NAME = #{record.cmdName,jdbcType=VARCHAR},
+      CMD = #{record.cmd,jdbcType=VARCHAR},
+      CMD_STR = #{record.cmdStr,jdbcType=VARCHAR},
+      CMD_TIME = #{record.cmdTime,jdbcType=TIMESTAMP},
+      SEND_TIME = #{record.sendTime,jdbcType=TIMESTAMP},
+      RESULT = #{record.result,jdbcType=VARCHAR},
+      RESULT_TIME = #{record.resultTime,jdbcType=TIMESTAMP},
+      STATUS = #{record.status,jdbcType=TINYINT},
+      EXE_COUNT = #{record.exeCount,jdbcType=SMALLINT},
+      BAT_ID = #{record.batId,jdbcType=INTEGER},
+      TOKEN_ID = #{record.tokenId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCmd">
+    update dd_monitor.biz_device_cmd
+    <set>
+      <if test="deviceNum != null">
+        DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="cmdName != null">
+        CMD_NAME = #{cmdName,jdbcType=VARCHAR},
+      </if>
+      <if test="cmd != null">
+        CMD = #{cmd,jdbcType=VARCHAR},
+      </if>
+      <if test="cmdStr != null">
+        CMD_STR = #{cmdStr,jdbcType=VARCHAR},
+      </if>
+      <if test="cmdTime != null">
+        CMD_TIME = #{cmdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendTime != null">
+        SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="result != null">
+        RESULT = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="resultTime != null">
+        RESULT_TIME = #{resultTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="exeCount != null">
+        EXE_COUNT = #{exeCount,jdbcType=SMALLINT},
+      </if>
+      <if test="batId != null">
+        BAT_ID = #{batId,jdbcType=INTEGER},
+      </if>
+      <if test="tokenId != null">
+        TOKEN_ID = #{tokenId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCmd">
+    update dd_monitor.biz_device_cmd
+    set DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR},
+      CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      CMD_NAME = #{cmdName,jdbcType=VARCHAR},
+      CMD = #{cmd,jdbcType=VARCHAR},
+      CMD_STR = #{cmdStr,jdbcType=VARCHAR},
+      CMD_TIME = #{cmdTime,jdbcType=TIMESTAMP},
+      SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},
+      RESULT = #{result,jdbcType=VARCHAR},
+      RESULT_TIME = #{resultTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=TINYINT},
+      EXE_COUNT = #{exeCount,jdbcType=SMALLINT},
+      BAT_ID = #{batId,jdbcType=INTEGER},
+      TOKEN_ID = #{tokenId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="com.diditech.iov.gps.app.device.po.BizDeviceCmdExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.biz_device_cmd
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

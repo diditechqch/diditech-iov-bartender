@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.rules.repository.EventAreaMapper">
+  <resultMap id="BaseResultMap" type="com.diditech.iov.gps.app.rules.po.EventArea">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="AREA_TYPE" jdbcType="TINYINT" property="areaType" />
+    <result column="ISDEL" jdbcType="TINYINT" property="isdel" />
+    <result column="AREA_HISTORY_ID" jdbcType="INTEGER" property="areaHistoryId" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="CLIENT_ID" jdbcType="VARCHAR" property="clientId" />
+    <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.diditech.iov.gps.app.rules.po.EventArea">
+    <result column="POINTS" jdbcType="LONGVARCHAR" property="points" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, AREA_TYPE, ISDEL, AREA_HISTORY_ID, CREATE_TIME, UPDATE_TIME, CLIENT_ID, TENANT_ID
+  </sql>
+  <sql id="Blob_Column_List">
+    POINTS
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.diditech.iov.gps.app.rules.po.EventAreaExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from dd_monitor.event_area
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.diditech.iov.gps.app.rules.po.EventAreaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.event_area
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from dd_monitor.event_area
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dd_monitor.event_area
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.diditech.iov.gps.app.rules.po.EventAreaExample">
+    delete from dd_monitor.event_area
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.diditech.iov.gps.app.rules.po.EventArea">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.event_area (AREA_TYPE, ISDEL, AREA_HISTORY_ID, 
+      CREATE_TIME, UPDATE_TIME, CLIENT_ID, 
+      TENANT_ID, POINTS)
+    values (#{areaType,jdbcType=TINYINT}, #{isdel,jdbcType=TINYINT}, #{areaHistoryId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{clientId,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=VARCHAR}, #{points,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.diditech.iov.gps.app.rules.po.EventArea">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.event_area
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="areaType != null">
+        AREA_TYPE,
+      </if>
+      <if test="isdel != null">
+        ISDEL,
+      </if>
+      <if test="areaHistoryId != null">
+        AREA_HISTORY_ID,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID,
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID,
+      </if>
+      <if test="points != null">
+        POINTS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="areaType != null">
+        #{areaType,jdbcType=TINYINT},
+      </if>
+      <if test="isdel != null">
+        #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="areaHistoryId != null">
+        #{areaHistoryId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="points != null">
+        #{points,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.diditech.iov.gps.app.rules.po.EventAreaExample" resultType="java.lang.Long">
+    select count(*) from dd_monitor.event_area
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dd_monitor.event_area
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.areaType != null">
+        AREA_TYPE = #{record.areaType,jdbcType=TINYINT},
+      </if>
+      <if test="record.isdel != null">
+        ISDEL = #{record.isdel,jdbcType=TINYINT},
+      </if>
+      <if test="record.areaHistoryId != null">
+        AREA_HISTORY_ID = #{record.areaHistoryId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.clientId != null">
+        CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null">
+        TENANT_ID = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.points != null">
+        POINTS = #{record.points,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update dd_monitor.event_area
+    set ID = #{record.id,jdbcType=INTEGER},
+      AREA_TYPE = #{record.areaType,jdbcType=TINYINT},
+      ISDEL = #{record.isdel,jdbcType=TINYINT},
+      AREA_HISTORY_ID = #{record.areaHistoryId,jdbcType=INTEGER},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      TENANT_ID = #{record.tenantId,jdbcType=VARCHAR},
+      POINTS = #{record.points,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dd_monitor.event_area
+    set ID = #{record.id,jdbcType=INTEGER},
+      AREA_TYPE = #{record.areaType,jdbcType=TINYINT},
+      ISDEL = #{record.isdel,jdbcType=TINYINT},
+      AREA_HISTORY_ID = #{record.areaHistoryId,jdbcType=INTEGER},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      TENANT_ID = #{record.tenantId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diditech.iov.gps.app.rules.po.EventArea">
+    update dd_monitor.event_area
+    <set>
+      <if test="areaType != null">
+        AREA_TYPE = #{areaType,jdbcType=TINYINT},
+      </if>
+      <if test="isdel != null">
+        ISDEL = #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="areaHistoryId != null">
+        AREA_HISTORY_ID = #{areaHistoryId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="points != null">
+        POINTS = #{points,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.diditech.iov.gps.app.rules.po.EventArea">
+    update dd_monitor.event_area
+    set AREA_TYPE = #{areaType,jdbcType=TINYINT},
+      ISDEL = #{isdel,jdbcType=TINYINT},
+      AREA_HISTORY_ID = #{areaHistoryId,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=VARCHAR},
+      POINTS = #{points,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diditech.iov.gps.app.rules.po.EventArea">
+    update dd_monitor.event_area
+    set AREA_TYPE = #{areaType,jdbcType=TINYINT},
+      ISDEL = #{isdel,jdbcType=TINYINT},
+      AREA_HISTORY_ID = #{areaHistoryId,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithBLOBsWithRowbounds" parameterType="com.diditech.iov.gps.app.rules.po.EventAreaExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from dd_monitor.event_area
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExampleWithRowbounds" parameterType="com.diditech.iov.gps.app.rules.po.EventAreaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.event_area
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

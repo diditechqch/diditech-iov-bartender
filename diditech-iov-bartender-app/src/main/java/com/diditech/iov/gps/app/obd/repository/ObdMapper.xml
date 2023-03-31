@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.diditech.iov.gps.app.obd.repository.ObdMapper">
+
+    <select id="getObdFaultList" parameterType="java.lang.String"
+            resultType="com.diditech.iov.gps.api.obd.domain.ObdFault">
+        SELECT
+            DEVICE_NUM AS deviceNum,
+            STATUS AS status,
+            ERROR_CODE AS errorCode,
+            GPS_TIME AS gpsTime,
+            CREATE_TIME AS createTime
+        FROM
+        biz_obd_fault
+        WHERE
+            DEVICE_NUM = #{deviceNum}
+    </select>
+
+    <select id="getObdData" parameterType="java.lang.String"
+            resultType="com.diditech.iov.gps.api.obd.domain.ObdData">
+        SELECT
+            DEVICE_NUM AS deviceNum,
+            OBD_SPEED AS obdSpeed,
+            OBD_ROTATION AS obdRotation,
+            OBD_OIL AS obdOil,
+            OBD_MILEAGE AS obdMileage,
+            OBD_AT AS obdAt,
+            OBD_WT AS obdWt,
+            OBD_CL AS obdCl,
+            OBD_ALM_TIRE_PRES AS obdAlmTirePres,
+            OBD_EL AS obdEl,
+            OBD_BFLS AS obdBfls,
+            OBD_FBPWL AS obdFbpwl,
+            OBD_BBPWL AS obdBbpwl,
+            OBD_EOL AS obdEol,
+            OBD_FAULT_NUM AS obdFaultNum,
+            OBD_FAULT_STATUS AS obdFaultStatus,
+            OBD_FM AS obdFm,
+            OBD_EST AS obdEst,
+            OBD_AIT AS obdAit,
+            OBD_AIRFLOW AS obdAirflow,
+            OBD_AP AS obdAp,
+            OBD_INP AS obdInp,
+            OBD_APP AS obdApp,
+            OBD_FP AS obdFp,
+            OBD_LTFA AS obdLtfa,
+            OBD_FCIAA AS obdFciaa,
+            OBD_ATP AS obdAtp,
+            UPDATE_TIME AS updateTime
+        FROM
+        biz_obd_data
+        WHERE
+            DEVICE_NUM = #{deviceNum}
+    </select>
+
+    <select id="getObdFuel" resultType="java.lang.Integer">
+        SELECT
+            MAX(FUEL_ACCUMULATIVE) - MIN(FUEL_ACCUMULATIVE) AS fuelAccumulative
+        FROM
+        biz_obd_fuel
+        WHERE
+            DEVICE_NUM = #{deviceNum}
+        AND GPS_TIME BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+    <select id="getObdFuelMulti" resultType="java.lang.Integer">
+        <foreach collection="timeFramesItems" separator="UNION ALL" item="item">
+            SELECT IFNULL(MAX(FUEL_ACCUMULATIVE) - MIN(FUEL_ACCUMULATIVE),0) AS fuelVaries
+            FROM
+            biz_obd_fuel
+            WHERE DEVICE_NUM = #{deviceNum}
+            AND GPS_TIME &gt;= #{item.startTime}
+            AND GPS_TIME &lt; #{item.endTime}
+        </foreach>
+    </select>
+
+    <select id="getObdFaultDescList" resultType="com.diditech.iov.gps.api.obd.domain.ObdFaultDesc">
+        SELECT
+            CODE AS code,
+            CODE_DESC_CN AS codeDescCn,
+            CODE_DESC_EN AS codeDescEn,
+            CATEGORY AS category,
+            IS_COMMON_CODE AS isCommonCode,
+            VEHICLE_BRAND AS vehicleBrand,
+            BACKGROUND AS background,
+            UPDATE_TIME AS updateTime
+        FROM
+            com_obd_fault_desc
+        WHERE CODE IN
+            <foreach collection="errorCodeList" separator="," item="item" open="(" close=")">
+            #{item}
+            </foreach>
+        AND is_common_code = 0
+        <if test="vehicleBrand != null">
+            OR ( CODE IN
+            <foreach collection="errorCodeList" separator="," item="item" open="(" close=")">
+                #{item}
+            </foreach>
+            AND is_common_code = 1
+            AND VEHICLE_BRAND = #{vehicleBrand} )
+        </if>
+    </select>
+
+    <select id="getAllFuel" resultType="java.lang.Integer">
+        SELECT
+            ifnull(FUEL_ACCUMULATIVE,0)
+        FROM
+            biz_obd_fuel
+        WHERE
+            DEVICE_NUM = #{deviceNum}
+        AND GPS_TIME BETWEEN #{startTime} AND #{endTime}
+        ORDER BY GPS_TIME
+    </select>
+
+    <select id="getCategoryId" resultType="java.lang.Integer">
+        SELECT
+            CATEGORY_ID
+        FROM
+            biz_device
+        WHERE
+            DEVICE_NUM = #{deviceNum}
+    </select>
+
+</mapper>

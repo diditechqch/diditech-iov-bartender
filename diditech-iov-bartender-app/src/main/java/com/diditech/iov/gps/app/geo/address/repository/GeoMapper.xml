@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.geo.address.repository.GeoMapper">
+
+    <select id="searchGeoLib" parameterType="String" resultType="com.diditech.iov.gps.app.geo.address.baidu.vo.GeoHash">
+		SELECT
+            GEO_CODE8 as geoCode8,
+            LNG, LAT, ADDRESS, SOURCE,
+            ADDR_TYPE as addrType,
+            ADDR_VERSION as addrVers,
+            CREATE_TIME as createTime
+		FROM geo_library
+		WHERE geo_code8 = #{geoCode8}
+	</select>
+
+    <insert id="insertData" parameterType="com.diditech.iov.gps.app.geo.address.baidu.vo.GeoHash">
+		INSERT INTO geo_library(LNG, LAT, GEO_CODE8, ADDRESS, SOURCE, ADDR_TYPE, ADDR_VERSION, CREATE_TIME)
+		VALUES (#{lng}, #{lat}, #{geoCode8}, #{address}, #{source}, #{addrType}, #{addrVers}, #{createTime})
+		ON DUPLICATE KEY UPDATE GEO_CODE8 = #{geoCode8}
+	</insert>
+
+    <delete id="deleteData" parameterType="String">
+		DELETE FROM geo_library
+		WHERE geo_code8 = #{geoCode8}
+	</delete>
+
+</mapper>

@@ -1,0 +1,47 @@
+server:
+  port: 9010
+
+spring:
+  profiles:
+    active: dev
+
+---
+
+## actuator
+management:
+  endpoints:
+    web.exposure.include: "*"
+
+application:
+  security:
+    oauth:
+      client[0]:
+        registered-redirect-uri: http://example.com
+        # 客户端 id
+        client-id: ${CLIENT_ID}
+        # 客户端密钥
+        client-secret: ${CLIENT_SECRET}
+        # 授权范围
+        scope: all
+        # token 有效期
+        access-token-validity-seconds: 6000
+        # 刷新 token 的有效期
+        refresh-token-validity-seconds: 6000
+        # 允许的授权类型
+        grant-type: authorization_code,password,refresh_token,client_credentials
+        # 可以访问的资源 id
+        # resource-ids: oauth2
+
+## redis
+spring:
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    database: ${REDIS_DB}
+
+## 对称加密
+keypair:
+  filename: didigps.jks
+  alias: didigps
+  password: DiDiAdmin@020

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.diditech.iov.gps.app.stop.repository.StopPointMapper">
+
+
+    <select id="getStopPointList" resultType="com.diditech.iov.gps.api.stop.domain.StopPointInfo">
+        SELECT
+            BEGIN_TIME AS beginTime,
+            END_TIME AS endTime,
+            TOTAL_SECOND AS totalSecond,
+            LAT_BD AS latBd,
+            LNG_BD AS lngBd
+        FROM
+            dd_monitor_acc.acc_stop
+        WHERE
+            DEVICE_NUM = #{deviceNum}
+        AND BEGIN_TIME &gt;= #{startTime}
+        AND BEGIN_TIME &lt;= #{endTime}
+        <if test="minStaySeconds != null">
+            AND TOTAL_SECOND &gt;=  #{minStaySeconds}
+        </if>
+        ORDER BY id DESC
+    </select>
+
+
+
+</mapper>

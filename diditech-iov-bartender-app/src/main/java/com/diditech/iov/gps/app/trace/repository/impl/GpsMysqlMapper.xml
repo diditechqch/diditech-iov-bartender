@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.trace.repository.impl.GpsMysqlMapper">
+
+    <select id="loadGpsTableListFromDb" resultType="String">
+        SELECT CONCAT_WS('.',TABLE_SCHEMA, TABLE_NAME) TNAME FROM INFORMATION_SCHEMA.`TABLES` T
+        <where>
+            TABLE_SCHEMA LIKE 'DD_%' AND lower(TABLE_NAME) <![CDATA[ >= ]]>#{beginTableName} AND lower(TABLE_NAME)
+            <![CDATA[ <= ]]>#{endTableName}
+        </where>
+        ORDER BY TNAME
+    </select>
+
+    <select id="countGpsData" resultType="int">
+        select sum(g.cnt) from (
+        <foreach collection="gpsTableConditionsList" item="item" separator="UNION ALL" open="" close="">
+            SELECT count(1) cnt
+            FROM ${item.gpsTable}
+            WHERE DEVICE_NUM=#{item.deviceNum}
+            AND GPS_TIME BETWEEN #{item.beginTime} AND #{item.endTime}
+            AND AV='A'
+        </foreach>
+        ) g
+    </select>
+
+    <select id="getTrace" resultType="com.diditech.iov.gps.api.trace.entity.TraceInfo">
+        select * from (
+        <foreach collection="gpsTableConditionsList" item="item" separator="UNION ALL" open="" close="">
+            SELECT
+            GPS_TIME AS gpsTime,
+            LNG_BD AS lngBd,
+            LAT_BD AS latBd,
+            LNG_GC AS lngGc,
+            LAT_GC AS latGc,
+            DIRECTION_NAME AS directionName,
+            STATUS,
+            CREATE_TIME AS createTime,
+            IS_RESEND AS isOld,
+            ORI_MILEAGE AS oriMileage,
+            TOTAL_MILEAGE AS totalMileage,
+            OBD_SPEED AS obdSpeed,
+            OBD_MESSAGE AS obdMessage,
+            SPEED
+            FROM ${item.gpsTable}
+            WHERE DEVICE_NUM=#{item.deviceNum}
+            AND GPS_TIME BETWEEN #{item.beginTime} AND #{item.endTime}
+            AND AV='A'
+        </foreach>
+        ) g order by g.gpsTime ASC
+    </select>
+
+    <select id="getTraceTripMin" resultType="com.diditech.iov.gps.api.trace.entity.GpsInfoTripMin">
+        select * from (
+        <foreach collection="gpsTableConditionsList" item="item" separator="UNION ALL" open="" close="">
+            SELECT
+            GPS_TIME AS gpsTime,
+            CREATE_TIME AS createTime,
+            ${coordinate}
+            ORI_MILEAGE AS oriMileage,
+            CASE
+                WHEN OBD_SPEED IS NOT NULL and OBD_SPEED!='' THEN OBD_SPEED ELSE SPEED
+                END AS speed
+            FROM ${item.gpsTable}
+            WHERE DEVICE_NUM=#{item.deviceNum}
+            AND GPS_TIME BETWEEN #{item.beginTime} AND #{item.endTime}
+            AND AV='A'
+        </foreach>
+        ) g order by g.gpsTime ASC
+    </select>
+
+    <select id="getGpsEntity" resultType="com.diditech.iov.gps.app.trace.po.GpsEntity">
+        SELECT
+            DEVICE_NUM AS deviceNum,
+            GPS_TIME AS gpsTime,
+            LNG,
+            LAT,
+            LNG_BD AS lngBd,
+            LAT_BD AS latBd,
+            LNG_GC AS lngGc,
+            LAT_GC AS latGc,
+            IF( OBD_SPEED IS NOT NULL, OBD_SPEED, SPEED ) AS speed,
+            IF( OBD_ACC IS NOT NULL, OBD_ACC, ACC ) AS almAccon,
+            OBD_MESSAGE AS locMode
+        FROM ${condition.gpsTable}
+        WHERE DEVICE_NUM = ${condition.deviceNum}
+        AND GPS_TIME &lt;= ${condition.beginTime}
+        ORDER BY GPS_TIME DESC LIMIT 1
+    </select>
+
+</mapper>

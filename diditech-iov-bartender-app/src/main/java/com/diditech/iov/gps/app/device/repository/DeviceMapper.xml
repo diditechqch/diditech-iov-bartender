@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.diditech.iov.gps.app.device.repository.DeviceMapper">
+
+    <select id="getDeviceLocation" parameterType="java.lang.String"
+            resultType="com.diditech.iov.gps.api.device.domain.DeviceLocation">
+        SELECT
+        d.DEVICE_NUM AS deviceNum,
+        d.WIFI_FLAG AS wifiFlag,
+        c.CATEGORY_NO AS categoryNo,
+        c.CATEGORY_NO_SHORT AS categoryNoShort,
+        p.LNG_GC AS lngGc,
+        p.LAT_GC AS latGc,
+        p.LNG_BD AS lngBd,
+        p.LAT_BD AS latBd,
+        p.LOC_MODE AS locMode,
+        p.SAT_COUNT AS satCount,
+        p.SIGNAL_LEVEL AS signalLevel,
+        p.GPS_TIME AS gpsTime,
+        p.CREATE_TIME AS createTime,
+        p.SPEED AS speed,
+        p.ISMOVING AS isMoving,
+        p.DIRECTION AS direction,
+        p.DIRECTION_NAME AS directionName,
+        p.ALM_OFFLINE AS almOffline,
+        p.ISSLEEPING AS isSleeping,
+        p.START_TIME_ON_OFF_LINE AS startTimeOnOffLine,
+        p.START_TIME_MOVING_STOP AS startTimeMovingStop,
+        p.TAG
+        FROM biz_device d
+        INNER JOIN biz_position p ON d.DEVICE_NUM = p.DEVICE_NUM AND d.ISDEL = 0
+        INNER JOIN biz_device_category c ON d.CATEGORY_ID = c.ID
+        WHERE d.DEVICE_NUM = #{deviceNum}
+    </select>
+
+    <select id="getDeviceMileage" parameterType="java.lang.String"
+            resultType="com.diditech.iov.gps.api.device.domain.DeviceMileage">
+        SELECT
+        d.DEVICE_NUM AS deviceNum,
+        p.HARD_MILEAGE AS hardMileage,
+        p.OBD_MILEAGE AS obdMileage,
+        p.TOTAL_MILEAGE AS totalMileage,
+        diff.ZQYC_DIFF AS zqycDiff
+        FROM biz_device d
+        LEFT JOIN biz_position p ON d.DEVICE_NUM = p.DEVICE_NUM AND d.ISDEL = 0
+        LEFT JOIN biz_device_mileage_diff diff ON d.DEVICE_NUM = diff.DEVICE_NUM
+        WHERE d.DEVICE_NUM = #{deviceNum}
+    </select>
+
+    <update id="updateDeviceMileage">
+        INSERT INTO biz_device_mileage_diff (DEVICE_NUM, ZQYC_DIFF)
+        VALUES (#{deviceNum}, #{zqycDiff})
+        ON DUPLICATE KEY
+        UPDATE DEVICE_NUM = #{deviceNum}, ZQYC_DIFF = #{zqycDiff}
+    </update>
+
+    <select id="getDeviceMileageDiffer" resultType="com.diditech.iov.gps.api.device.domain.DeviceMileage">
+        SELECT
+        d.DEVICE_NUM AS deviceNum,
+        ${correctMileage} - IFNULL(p.TOTAL_MILEAGE, 0) AS zqycDiff
+        FROM biz_device d
+        LEFT JOIN biz_position p ON d.DEVICE_NUM = p.DEVICE_NUM AND d.ISDEL = 0
+        WHERE d.DEVICE_NUM = #{deviceNum}
+    </select>
+
+    <select id="countByClientNDeviceNum" resultType="int">
+        SELECT COUNT(DEVICE_NUM)
+        FROM biz_device
+        WHERE DEVICE_NUM = #{deviceNum}
+        AND CLIENT_ID = #{clientId}
+        AND ISDEL = 0
+    </select>
+
+    <update id="batchStartOrStop">
+        UPDATE biz_device SET ISENABLE = #{isEnable} WHERE DEVICE_NUM IN
+        <foreach collection="devices" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND CLIENT_ID = #{clientId}
+        AND ISDEL = 0
+    </update>
+
+    <select id="getCateIdByCateNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT category.ID
+        FROM biz_device_category category
+        WHERE category.CATEGORY_NO = #{categoryNo}
+        AND category.ISDEL = 0
+    </select>
+
+    <insert id="saveDevice" parameterType="com.diditech.iov.gps.api.device.domain.Device">
+        INSERT INTO biz_device
+            (
+            DEVICE_NUM,
+            CATEGORY_ID,
+            WIFI_FLAG,
+            LBS_ENABLE,
+            TIMEOUT_THRESHOLD,
+            ISENABLE,
+            ISDEL,
+            CREATE_TIME,
+            UPDATE_TIME,
+            CLIENT_ID,
+            TENANT_ID
+            )
+        VALUES(
+            #{device.deviceNum},
+            #{device.categoryId},
+            #{device.wifiFlag},
+            #{device.lbsEnable},
+            #{device.timeoutThreshold},
+            #{device.isenable},
+            0,
+            NOW(),
+            NOW(),
+            #{device.clientId},
+            #{device.tenantId}
+            )
+    </insert>
+
+    <update id="delDevice">
+        UPDATE biz_device
+        SET ISDEL = 1, UPDATE_TIME = NOW()
+        WHERE DEVICE_NUM = #{deviceNum}
+    </update>
+
+    <insert id="updateDevice" parameterType="com.diditech.iov.gps.api.device.domain.Device">
+        UPDATE biz_device
+        SET
+            CATEGORY_ID = #{device.categoryId},
+            WIFI_FLAG = #{device.wifiFlag},
+            LBS_ENABLE = #{device.lbsEnable},
+            TIMEOUT_THRESHOLD = #{device.timeoutThreshold},
+            UPDATE_TIME = #{device.updateTime},
+            CLIENT_ID = #{device.clientId},
+            TENANT_ID = #{device.tenantId}
+        WHERE
+            DEVICE_NUM = #{device.deviceNum}
+    </insert>
+
+    <select id="getDeviceConfigData" resultType="com.diditech.iov.gps.api.device.domain.ClientConfig">
+        SELECT
+            CLIENT_ID AS clientId,
+            CATEGORY_NO AS categoryNo,
+            LBS_ENABLE AS lbsEnable,
+            TIMEOUT_THRESHOLD AS timeoutThreshold
+        FROM com_client_device_config
+    </select>
+
+    <select id="isExistDevice" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM biz_device
+        WHERE DEVICE_NUM = #{deviceNum}
+        AND ISDEL = 0
+    </select>
+
+    <insert id="insertCmdList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into biz_device_cmd (DEVICE_NUM, CLIENT_ID, CMD_NAME, CMD, CMD_STR, CMD_TIME, STATUS, EXE_COUNT, BAT_ID)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.deviceNum}, #{item.clientId}, #{item.cmdName}, #{item.cmd}, #{item.cmdStr}, #{item.cmdTime},
+            #{item.status}, #{item.exeCount}, #{item.batId})
+        </foreach>
+    </insert>
+
+    <select id="getDevicesByGpsTime" resultType="java.lang.String">
+        SELECT DEVICE_NUM FROM dd_monitor.biz_position WHERE GPS_TIME > date_sub(curdate(), interval ${interval} day);
+    </select>
+</mapper>

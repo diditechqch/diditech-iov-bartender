@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.diditech.iov.gps.demo.repository.AccMapper">
+    <insert id="insertStopData" useGeneratedKeys="true" keyProperty="item.id"
+            parameterType="com.diditech.iov.gps.common.domain.StopData">
+        INSERT INTO dd_monitor_acc.acc_stop
+        (DEVICE_NUM, BEGIN_TIME, END_TIME, TOTAL_SECOND, LAT_BD, LNG_BD, LOC_MODE)
+        VALUES
+        ( #{item.deviceNum}, #{item.beginTime}, #{item.endTime}, #{item.totalSecond}, #{item.latBd}, #{item.lngBd},#{item.locMode})
+    </insert>
+
+    <delete id="deleteStopData">
+        DELETE FROM dd_monitor_acc.acc_stop
+        WHERE DEVICE_NUM = #{deviceNum}
+        AND END_TIME IS NOT NULL
+        AND END_TIME &lt;= #{time}
+    </delete>
+    
+    <insert id="insertSiteInfo">
+        INSERT INTO dd_new.acc_site_info
+         (ID, HUB_TYPE, HUB_ADDRESS, HUB_NAME, HUB_LAT, HUB_LNG, POINTS, HUB_AREA, ISENABLE, ISDEL)
+        VALUES (
+        #{item.id},
+        #{item.hubType},
+        #{item.hubAddress},
+        #{item.hubName},
+        #{item.hubLat},
+        #{item.hubLng},
+        #{item.points},
+        #{item.hubArea},
+        1,
+        0
+        )
+    </insert>
+</mapper>

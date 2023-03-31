@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.rules.repository.EventRuleMapper">
+  <resultMap id="BaseResultMap" type="com.diditech.iov.gps.app.rules.po.EventRule">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="RULE_TYPE" jdbcType="INTEGER" property="ruleType" />
+    <result column="RULE_NAME" jdbcType="VARCHAR" property="ruleName" />
+    <result column="AREA_ENABLE" jdbcType="TINYINT" property="areaEnable" />
+    <result column="ISDEL" jdbcType="TINYINT" property="isdel" />
+    <result column="ENABLE_TIME_FROM" jdbcType="TIMESTAMP" property="enableTimeFrom" />
+    <result column="ENABLE_TIME_TO" jdbcType="TIMESTAMP" property="enableTimeTo" />
+    <result column="TIME_ENABLE" jdbcType="TINYINT" property="timeEnable" />
+    <result column="CLIENT_ID" jdbcType="VARCHAR" property="clientId" />
+    <result column="TENANT_ID" jdbcType="VARCHAR" property="tenantId" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="THRESHOLD1" jdbcType="VARCHAR" property="threshold1" />
+    <result column="THRESHOLD2" jdbcType="VARCHAR" property="threshold2" />
+    <result column="THRESHOLD3" jdbcType="VARCHAR" property="threshold3" />
+    <result column="THRESHOLD4" jdbcType="VARCHAR" property="threshold4" />
+    <result column="THRESHOLD5" jdbcType="VARCHAR" property="threshold5" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, RULE_TYPE, RULE_NAME, AREA_ENABLE, ISDEL, ENABLE_TIME_FROM, ENABLE_TIME_TO, TIME_ENABLE, 
+    CLIENT_ID, TENANT_ID, CREATE_TIME, UPDATE_TIME, THRESHOLD1, THRESHOLD2, THRESHOLD3, 
+    THRESHOLD4, THRESHOLD5
+  </sql>
+  <select id="selectByExample" parameterType="com.diditech.iov.gps.app.rules.po.EventRuleExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.event_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dd_monitor.event_rule
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dd_monitor.event_rule
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.diditech.iov.gps.app.rules.po.EventRuleExample">
+    delete from dd_monitor.event_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.diditech.iov.gps.app.rules.po.EventRule">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.event_rule (RULE_TYPE, RULE_NAME, AREA_ENABLE, 
+      ISDEL, ENABLE_TIME_FROM, ENABLE_TIME_TO, 
+      TIME_ENABLE, CLIENT_ID, TENANT_ID, 
+      CREATE_TIME, UPDATE_TIME, THRESHOLD1, 
+      THRESHOLD2, THRESHOLD3, THRESHOLD4, 
+      THRESHOLD5)
+    values (#{ruleType,jdbcType=INTEGER}, #{ruleName,jdbcType=VARCHAR}, #{areaEnable,jdbcType=TINYINT}, 
+      #{isdel,jdbcType=TINYINT}, #{enableTimeFrom,jdbcType=TIMESTAMP}, #{enableTimeTo,jdbcType=TIMESTAMP}, 
+      #{timeEnable,jdbcType=TINYINT}, #{clientId,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{threshold1,jdbcType=VARCHAR}, 
+      #{threshold2,jdbcType=VARCHAR}, #{threshold3,jdbcType=VARCHAR}, #{threshold4,jdbcType=VARCHAR}, 
+      #{threshold5,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.diditech.iov.gps.app.rules.po.EventRule">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dd_monitor.event_rule
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ruleType != null">
+        RULE_TYPE,
+      </if>
+      <if test="ruleName != null">
+        RULE_NAME,
+      </if>
+      <if test="areaEnable != null">
+        AREA_ENABLE,
+      </if>
+      <if test="isdel != null">
+        ISDEL,
+      </if>
+      <if test="enableTimeFrom != null">
+        ENABLE_TIME_FROM,
+      </if>
+      <if test="enableTimeTo != null">
+        ENABLE_TIME_TO,
+      </if>
+      <if test="timeEnable != null">
+        TIME_ENABLE,
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID,
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="threshold1 != null">
+        THRESHOLD1,
+      </if>
+      <if test="threshold2 != null">
+        THRESHOLD2,
+      </if>
+      <if test="threshold3 != null">
+        THRESHOLD3,
+      </if>
+      <if test="threshold4 != null">
+        THRESHOLD4,
+      </if>
+      <if test="threshold5 != null">
+        THRESHOLD5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ruleType != null">
+        #{ruleType,jdbcType=INTEGER},
+      </if>
+      <if test="ruleName != null">
+        #{ruleName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaEnable != null">
+        #{areaEnable,jdbcType=TINYINT},
+      </if>
+      <if test="isdel != null">
+        #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="enableTimeFrom != null">
+        #{enableTimeFrom,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enableTimeTo != null">
+        #{enableTimeTo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeEnable != null">
+        #{timeEnable,jdbcType=TINYINT},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="threshold1 != null">
+        #{threshold1,jdbcType=VARCHAR},
+      </if>
+      <if test="threshold2 != null">
+        #{threshold2,jdbcType=VARCHAR},
+      </if>
+      <if test="threshold3 != null">
+        #{threshold3,jdbcType=VARCHAR},
+      </if>
+      <if test="threshold4 != null">
+        #{threshold4,jdbcType=VARCHAR},
+      </if>
+      <if test="threshold5 != null">
+        #{threshold5,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.diditech.iov.gps.app.rules.po.EventRuleExample" resultType="java.lang.Long">
+    select count(*) from dd_monitor.event_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dd_monitor.event_rule
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.ruleType != null">
+        RULE_TYPE = #{record.ruleType,jdbcType=INTEGER},
+      </if>
+      <if test="record.ruleName != null">
+        RULE_NAME = #{record.ruleName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.areaEnable != null">
+        AREA_ENABLE = #{record.areaEnable,jdbcType=TINYINT},
+      </if>
+      <if test="record.isdel != null">
+        ISDEL = #{record.isdel,jdbcType=TINYINT},
+      </if>
+      <if test="record.enableTimeFrom != null">
+        ENABLE_TIME_FROM = #{record.enableTimeFrom,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.enableTimeTo != null">
+        ENABLE_TIME_TO = #{record.enableTimeTo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.timeEnable != null">
+        TIME_ENABLE = #{record.timeEnable,jdbcType=TINYINT},
+      </if>
+      <if test="record.clientId != null">
+        CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantId != null">
+        TENANT_ID = #{record.tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.threshold1 != null">
+        THRESHOLD1 = #{record.threshold1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.threshold2 != null">
+        THRESHOLD2 = #{record.threshold2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.threshold3 != null">
+        THRESHOLD3 = #{record.threshold3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.threshold4 != null">
+        THRESHOLD4 = #{record.threshold4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.threshold5 != null">
+        THRESHOLD5 = #{record.threshold5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dd_monitor.event_rule
+    set ID = #{record.id,jdbcType=INTEGER},
+      RULE_TYPE = #{record.ruleType,jdbcType=INTEGER},
+      RULE_NAME = #{record.ruleName,jdbcType=VARCHAR},
+      AREA_ENABLE = #{record.areaEnable,jdbcType=TINYINT},
+      ISDEL = #{record.isdel,jdbcType=TINYINT},
+      ENABLE_TIME_FROM = #{record.enableTimeFrom,jdbcType=TIMESTAMP},
+      ENABLE_TIME_TO = #{record.enableTimeTo,jdbcType=TIMESTAMP},
+      TIME_ENABLE = #{record.timeEnable,jdbcType=TINYINT},
+      CLIENT_ID = #{record.clientId,jdbcType=VARCHAR},
+      TENANT_ID = #{record.tenantId,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      THRESHOLD1 = #{record.threshold1,jdbcType=VARCHAR},
+      THRESHOLD2 = #{record.threshold2,jdbcType=VARCHAR},
+      THRESHOLD3 = #{record.threshold3,jdbcType=VARCHAR},
+      THRESHOLD4 = #{record.threshold4,jdbcType=VARCHAR},
+      THRESHOLD5 = #{record.threshold5,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diditech.iov.gps.app.rules.po.EventRule">
+    update dd_monitor.event_rule
+    <set>
+      <if test="ruleType != null">
+        RULE_TYPE = #{ruleType,jdbcType=INTEGER},
+      </if>
+      <if test="ruleName != null">
+        RULE_NAME = #{ruleName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaEnable != null">
+        AREA_ENABLE = #{areaEnable,jdbcType=TINYINT},
+      </if>
+      <if test="isdel != null">
+        ISDEL = #{isdel,jdbcType=TINYINT},
+      </if>
+      <if test="enableTimeFrom != null">
+        ENABLE_TIME_FROM = #{enableTimeFrom,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enableTimeTo != null">
+        ENABLE_TIME_TO = #{enableTimeTo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeEnable != null">
+        TIME_ENABLE = #{timeEnable,jdbcType=TINYINT},
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        TENANT_ID = #{tenantId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="threshold1 != null">
+        THRESHOLD1 = #{threshold1,jdbcType=VARCHAR},
+      </if>
+      <if test="threshold2 != null">
+        THRESHOLD2 = #{threshold2,jdbcType=VARCHAR},
+      </if>
+      <if test="threshold3 != null">
+        THRESHOLD3 = #{threshold3,jdbcType=VARCHAR},
+      </if>
+      <if test="threshold4 != null">
+        THRESHOLD4 = #{threshold4,jdbcType=VARCHAR},
+      </if>
+      <if test="threshold5 != null">
+        THRESHOLD5 = #{threshold5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diditech.iov.gps.app.rules.po.EventRule">
+    update dd_monitor.event_rule
+    set RULE_TYPE = #{ruleType,jdbcType=INTEGER},
+      RULE_NAME = #{ruleName,jdbcType=VARCHAR},
+      AREA_ENABLE = #{areaEnable,jdbcType=TINYINT},
+      ISDEL = #{isdel,jdbcType=TINYINT},
+      ENABLE_TIME_FROM = #{enableTimeFrom,jdbcType=TIMESTAMP},
+      ENABLE_TIME_TO = #{enableTimeTo,jdbcType=TIMESTAMP},
+      TIME_ENABLE = #{timeEnable,jdbcType=TINYINT},
+      CLIENT_ID = #{clientId,jdbcType=VARCHAR},
+      TENANT_ID = #{tenantId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      THRESHOLD1 = #{threshold1,jdbcType=VARCHAR},
+      THRESHOLD2 = #{threshold2,jdbcType=VARCHAR},
+      THRESHOLD3 = #{threshold3,jdbcType=VARCHAR},
+      THRESHOLD4 = #{threshold4,jdbcType=VARCHAR},
+      THRESHOLD5 = #{threshold5,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="com.diditech.iov.gps.app.rules.po.EventRuleExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.event_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>
