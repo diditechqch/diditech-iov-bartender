@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.report.repository.RptMapper">
+    <resultMap id="TripResultMap" type="com.diditech.iov.gps.app.report.po.RptTrips">
+        <id column="DEVICE_NUM" jdbcType="VARCHAR" property="deviceNum"/>
+        <id column="START_TIME" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="DAY_TAG" jdbcType="VARCHAR" property="dayTag"/>
+        <result column="END_TIME" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="DISTANCE" jdbcType="DECIMAL" property="distance"/>
+        <result column="SPEED_MAX" jdbcType="SMALLINT" property="speedMax"/>
+        <result column="SPEED_AVE" jdbcType="SMALLINT" property="speedAve"/>
+        <result column="FUEL_CONSUMPTION" jdbcType="INTEGER" property="fuelConsumption"/>
+        <result column="START_LNG_BD" jdbcType="DECIMAL" property="startLngBd"/>
+        <result column="START_LAT_BD" jdbcType="DECIMAL" property="startLatBd"/>
+        <result column="END_LNG_BD" jdbcType="DECIMAL" property="endLngBd"/>
+        <result column="END_LAT_BD" jdbcType="DECIMAL" property="endLatBd"/>
+        <result column="START_LNG_GC" jdbcType="DECIMAL" property="startLngGc"/>
+        <result column="START_LAT_GC" jdbcType="DECIMAL" property="startLatGc"/>
+        <result column="END_LNG_GC" jdbcType="DECIMAL" property="endLngGc"/>
+        <result column="END_LAT_GC" jdbcType="DECIMAL" property="endLatGc"/>
+        <result column="START_LNG" jdbcType="DECIMAL" property="startLng"/>
+        <result column="START_LAT" jdbcType="DECIMAL" property="startLat"/>
+        <result column="END_LNG" jdbcType="DECIMAL" property="endLng"/>
+        <result column="END_LAT" jdbcType="DECIMAL" property="endLat"/>
+        <result column="START_ADDRESS" jdbcType="VARCHAR" property="startAddress"/>
+        <result column="END_ADDRESS" jdbcType="VARCHAR" property="endAddress"/>
+    </resultMap>
+    
+    <sql id="Trip_Column_List">
+    DEVICE_NUM, START_TIME, DAY_TAG, END_TIME, DISTANCE, SPEED_MAX, SPEED_AVE, FUEL_CONSUMPTION,
+    START_LNG_BD, START_LAT_BD, END_LNG_BD, END_LAT_BD, START_LNG_GC, START_LAT_GC, END_LNG_GC,
+    END_LAT_GC, START_LNG, START_LAT, END_LNG, END_LAT, START_ADDRESS, END_ADDRESS
+    </sql>
+
+    <sql id="Stop_Column_List">
+    DEVICE_NUM, START_TIME, DAY_TAG, END_TIME, LNG_BD, LAT_BD, LNG_GC, LAT_GC, LNG, LAT,
+    ADDRESS
+    </sql>
+
+    <insert id="batchInsertTrips" parameterType="com.diditech.iov.gps.app.report.po.RptTrips">
+        insert into dd_monitor.rpt_trips (DEVICE_NUM, DAY_TAG, START_TIME, END_TIME, DISTANCE, DURATION, SPEED_MAX,
+        SPEED_AVE, FUEL_CONSUMPTION, START_LNG_BD, START_LAT_BD, END_LNG_BD, END_LAT_BD, START_LNG_GC, START_LAT_GC,
+        END_LNG_GC, END_LAT_GC, START_LNG, START_LAT, END_LNG, END_LAT, START_ADDRESS, END_ADDRESS) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.deviceNum}, #{item.dayTag}, #{item.startTime}, #{item.endTime}, #{item.distance}, #{item.duration},
+            #{item.speedMax}, #{item.speedAve}, #{item.fuelConsumption}, #{item.startLngBd}, #{item.startLatBd},
+            #{item.endLngBd}, #{item.endLatBd}, #{item.startLngGc}, #{item.startLatGc}, #{item.endLngGc},
+            #{item.endLatGc}, #{item.startLng}, #{item.startLat}, #{item.endLng}, #{item.endLat}, #{item.startAddress},
+            #{item.endAddress})
+        </foreach>
+    </insert>
+
+    <insert id="batchInsertStops" parameterType="com.diditech.iov.gps.app.report.po.RptStops">
+        INSERT INTO dd_monitor.rpt_stops (DEVICE_NUM, DAY_TAG, START_TIME, END_TIME, DURATION, LNG_BD, LAT_BD,
+        LNG_GC, LAT_GC, LNG, LAT, ADDRESS) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.deviceNum}, #{item.dayTag}, #{item.startTime}, #{item.endTime}, #{item.duration}, #{item.lngBd},
+            #{item.latBd}, #{item.lngGc}, #{item.latGc}, #{item.lng}, #{item.lat}, #{item.address})
+        </foreach>
+    </insert>
+
+    <select id="selectRptTripsBefore" resultMap="TripResultMap">
+        SELECT
+        <include refid="Trip_Column_List"/>
+        FROM dd_monitor.rpt_trips WHERE DEVICE_NUM = #{deviceNum} AND START_TIME &lt; #{startTime} ORDER BY
+        START_TIME DESC LIMIT 1
+    </select>
+
+    <insert id="batchInsertDayGps" parameterType="com.diditech.iov.gps.app.report.po.RptDayGps">
+        INSERT INTO dd_monitor.rpt_day_gps (DEVICE_NUM, DAY_TAG, GPS_TIME, LAT, LNG, LAT_BD, LNG_BD, LAT_GC, LNG_GC,
+        DAY_MILEAGE, FUEL_CONSUMPTION, ISMOVING, ALM_ACCON, LOC_MODE, ADDRESS) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.deviceNum}, #{item.dayTag}, #{item.gpsTime}, #{item.lat}, #{item.lng}, #{item.latBd}, #{item.lngBd},
+            #{item.latGc}, #{item.lngGc}, #{item.dayMileage}, #{item.fuelConsumption}, #{item.ismoving},
+            #{item.almAccon}, #{item.locMode}, #{item.address})
+        </foreach>
+    </insert>
+</mapper>

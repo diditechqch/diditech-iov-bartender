@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.report.repository.RptDayGpsMapper">
+  <resultMap id="BaseResultMap" type="com.diditech.iov.gps.app.report.po.RptDayGps">
+    <id column="DEVICE_NUM" jdbcType="VARCHAR" property="deviceNum" />
+    <id column="DAY_TAG" jdbcType="VARCHAR" property="dayTag" />
+    <result column="GPS_TIME" jdbcType="TIMESTAMP" property="gpsTime" />
+    <result column="LAT" jdbcType="DECIMAL" property="lat" />
+    <result column="LNG" jdbcType="DECIMAL" property="lng" />
+    <result column="LAT_BD" jdbcType="DECIMAL" property="latBd" />
+    <result column="LNG_BD" jdbcType="DECIMAL" property="lngBd" />
+    <result column="LAT_GC" jdbcType="DECIMAL" property="latGc" />
+    <result column="LNG_GC" jdbcType="DECIMAL" property="lngGc" />
+    <result column="DAY_MILEAGE" jdbcType="DECIMAL" property="dayMileage" />
+    <result column="FUEL_CONSUMPTION" jdbcType="INTEGER" property="fuelConsumption" />
+    <result column="ISMOVING" jdbcType="TINYINT" property="ismoving" />
+    <result column="ALM_ACCON" jdbcType="TINYINT" property="almAccon" />
+    <result column="LOC_MODE" jdbcType="TINYINT" property="locMode" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    DEVICE_NUM, DAY_TAG, GPS_TIME, LAT, LNG, LAT_BD, LNG_BD, LAT_GC, LNG_GC, DAY_MILEAGE, 
+    FUEL_CONSUMPTION, ISMOVING, ALM_ACCON, LOC_MODE, ADDRESS
+  </sql>
+  <select id="selectByExample" parameterType="com.diditech.iov.gps.app.report.po.RptDayGpsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.rpt_day_gps
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="com.diditech.iov.gps.app.report.po.RptDayGpsKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dd_monitor.rpt_day_gps
+    where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR}
+      and DAY_TAG = #{dayTag,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.diditech.iov.gps.app.report.po.RptDayGpsKey">
+    delete from dd_monitor.rpt_day_gps
+    where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR}
+      and DAY_TAG = #{dayTag,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.diditech.iov.gps.app.report.po.RptDayGpsExample">
+    delete from dd_monitor.rpt_day_gps
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.diditech.iov.gps.app.report.po.RptDayGps">
+    insert into dd_monitor.rpt_day_gps (DEVICE_NUM, DAY_TAG, GPS_TIME, 
+      LAT, LNG, LAT_BD, LNG_BD, 
+      LAT_GC, LNG_GC, DAY_MILEAGE, 
+      FUEL_CONSUMPTION, ISMOVING, ALM_ACCON, 
+      LOC_MODE, ADDRESS)
+    values (#{deviceNum,jdbcType=VARCHAR}, #{dayTag,jdbcType=VARCHAR}, #{gpsTime,jdbcType=TIMESTAMP}, 
+      #{lat,jdbcType=DECIMAL}, #{lng,jdbcType=DECIMAL}, #{latBd,jdbcType=DECIMAL}, #{lngBd,jdbcType=DECIMAL}, 
+      #{latGc,jdbcType=DECIMAL}, #{lngGc,jdbcType=DECIMAL}, #{dayMileage,jdbcType=DECIMAL}, 
+      #{fuelConsumption,jdbcType=INTEGER}, #{ismoving,jdbcType=TINYINT}, #{almAccon,jdbcType=TINYINT}, 
+      #{locMode,jdbcType=TINYINT}, #{address,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.diditech.iov.gps.app.report.po.RptDayGps">
+    insert into dd_monitor.rpt_day_gps
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceNum != null">
+        DEVICE_NUM,
+      </if>
+      <if test="dayTag != null">
+        DAY_TAG,
+      </if>
+      <if test="gpsTime != null">
+        GPS_TIME,
+      </if>
+      <if test="lat != null">
+        LAT,
+      </if>
+      <if test="lng != null">
+        LNG,
+      </if>
+      <if test="latBd != null">
+        LAT_BD,
+      </if>
+      <if test="lngBd != null">
+        LNG_BD,
+      </if>
+      <if test="latGc != null">
+        LAT_GC,
+      </if>
+      <if test="lngGc != null">
+        LNG_GC,
+      </if>
+      <if test="dayMileage != null">
+        DAY_MILEAGE,
+      </if>
+      <if test="fuelConsumption != null">
+        FUEL_CONSUMPTION,
+      </if>
+      <if test="ismoving != null">
+        ISMOVING,
+      </if>
+      <if test="almAccon != null">
+        ALM_ACCON,
+      </if>
+      <if test="locMode != null">
+        LOC_MODE,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceNum != null">
+        #{deviceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="dayTag != null">
+        #{dayTag,jdbcType=VARCHAR},
+      </if>
+      <if test="gpsTime != null">
+        #{gpsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lat != null">
+        #{lat,jdbcType=DECIMAL},
+      </if>
+      <if test="lng != null">
+        #{lng,jdbcType=DECIMAL},
+      </if>
+      <if test="latBd != null">
+        #{latBd,jdbcType=DECIMAL},
+      </if>
+      <if test="lngBd != null">
+        #{lngBd,jdbcType=DECIMAL},
+      </if>
+      <if test="latGc != null">
+        #{latGc,jdbcType=DECIMAL},
+      </if>
+      <if test="lngGc != null">
+        #{lngGc,jdbcType=DECIMAL},
+      </if>
+      <if test="dayMileage != null">
+        #{dayMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="fuelConsumption != null">
+        #{fuelConsumption,jdbcType=INTEGER},
+      </if>
+      <if test="ismoving != null">
+        #{ismoving,jdbcType=TINYINT},
+      </if>
+      <if test="almAccon != null">
+        #{almAccon,jdbcType=TINYINT},
+      </if>
+      <if test="locMode != null">
+        #{locMode,jdbcType=TINYINT},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.diditech.iov.gps.app.report.po.RptDayGpsExample" resultType="java.lang.Long">
+    select count(*) from dd_monitor.rpt_day_gps
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dd_monitor.rpt_day_gps
+    <set>
+      <if test="record.deviceNum != null">
+        DEVICE_NUM = #{record.deviceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dayTag != null">
+        DAY_TAG = #{record.dayTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gpsTime != null">
+        GPS_TIME = #{record.gpsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lat != null">
+        LAT = #{record.lat,jdbcType=DECIMAL},
+      </if>
+      <if test="record.lng != null">
+        LNG = #{record.lng,jdbcType=DECIMAL},
+      </if>
+      <if test="record.latBd != null">
+        LAT_BD = #{record.latBd,jdbcType=DECIMAL},
+      </if>
+      <if test="record.lngBd != null">
+        LNG_BD = #{record.lngBd,jdbcType=DECIMAL},
+      </if>
+      <if test="record.latGc != null">
+        LAT_GC = #{record.latGc,jdbcType=DECIMAL},
+      </if>
+      <if test="record.lngGc != null">
+        LNG_GC = #{record.lngGc,jdbcType=DECIMAL},
+      </if>
+      <if test="record.dayMileage != null">
+        DAY_MILEAGE = #{record.dayMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fuelConsumption != null">
+        FUEL_CONSUMPTION = #{record.fuelConsumption,jdbcType=INTEGER},
+      </if>
+      <if test="record.ismoving != null">
+        ISMOVING = #{record.ismoving,jdbcType=TINYINT},
+      </if>
+      <if test="record.almAccon != null">
+        ALM_ACCON = #{record.almAccon,jdbcType=TINYINT},
+      </if>
+      <if test="record.locMode != null">
+        LOC_MODE = #{record.locMode,jdbcType=TINYINT},
+      </if>
+      <if test="record.address != null">
+        ADDRESS = #{record.address,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dd_monitor.rpt_day_gps
+    set DEVICE_NUM = #{record.deviceNum,jdbcType=VARCHAR},
+      DAY_TAG = #{record.dayTag,jdbcType=VARCHAR},
+      GPS_TIME = #{record.gpsTime,jdbcType=TIMESTAMP},
+      LAT = #{record.lat,jdbcType=DECIMAL},
+      LNG = #{record.lng,jdbcType=DECIMAL},
+      LAT_BD = #{record.latBd,jdbcType=DECIMAL},
+      LNG_BD = #{record.lngBd,jdbcType=DECIMAL},
+      LAT_GC = #{record.latGc,jdbcType=DECIMAL},
+      LNG_GC = #{record.lngGc,jdbcType=DECIMAL},
+      DAY_MILEAGE = #{record.dayMileage,jdbcType=DECIMAL},
+      FUEL_CONSUMPTION = #{record.fuelConsumption,jdbcType=INTEGER},
+      ISMOVING = #{record.ismoving,jdbcType=TINYINT},
+      ALM_ACCON = #{record.almAccon,jdbcType=TINYINT},
+      LOC_MODE = #{record.locMode,jdbcType=TINYINT},
+      ADDRESS = #{record.address,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diditech.iov.gps.app.report.po.RptDayGps">
+    update dd_monitor.rpt_day_gps
+    <set>
+      <if test="gpsTime != null">
+        GPS_TIME = #{gpsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lat != null">
+        LAT = #{lat,jdbcType=DECIMAL},
+      </if>
+      <if test="lng != null">
+        LNG = #{lng,jdbcType=DECIMAL},
+      </if>
+      <if test="latBd != null">
+        LAT_BD = #{latBd,jdbcType=DECIMAL},
+      </if>
+      <if test="lngBd != null">
+        LNG_BD = #{lngBd,jdbcType=DECIMAL},
+      </if>
+      <if test="latGc != null">
+        LAT_GC = #{latGc,jdbcType=DECIMAL},
+      </if>
+      <if test="lngGc != null">
+        LNG_GC = #{lngGc,jdbcType=DECIMAL},
+      </if>
+      <if test="dayMileage != null">
+        DAY_MILEAGE = #{dayMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="fuelConsumption != null">
+        FUEL_CONSUMPTION = #{fuelConsumption,jdbcType=INTEGER},
+      </if>
+      <if test="ismoving != null">
+        ISMOVING = #{ismoving,jdbcType=TINYINT},
+      </if>
+      <if test="almAccon != null">
+        ALM_ACCON = #{almAccon,jdbcType=TINYINT},
+      </if>
+      <if test="locMode != null">
+        LOC_MODE = #{locMode,jdbcType=TINYINT},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR}
+      and DAY_TAG = #{dayTag,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.diditech.iov.gps.app.report.po.RptDayGps">
+    update dd_monitor.rpt_day_gps
+    set GPS_TIME = #{gpsTime,jdbcType=TIMESTAMP},
+      LAT = #{lat,jdbcType=DECIMAL},
+      LNG = #{lng,jdbcType=DECIMAL},
+      LAT_BD = #{latBd,jdbcType=DECIMAL},
+      LNG_BD = #{lngBd,jdbcType=DECIMAL},
+      LAT_GC = #{latGc,jdbcType=DECIMAL},
+      LNG_GC = #{lngGc,jdbcType=DECIMAL},
+      DAY_MILEAGE = #{dayMileage,jdbcType=DECIMAL},
+      FUEL_CONSUMPTION = #{fuelConsumption,jdbcType=INTEGER},
+      ISMOVING = #{ismoving,jdbcType=TINYINT},
+      ALM_ACCON = #{almAccon,jdbcType=TINYINT},
+      LOC_MODE = #{locMode,jdbcType=TINYINT},
+      ADDRESS = #{address,jdbcType=VARCHAR}
+    where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR}
+      and DAY_TAG = #{dayTag,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="com.diditech.iov.gps.app.report.po.RptDayGpsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dd_monitor.rpt_day_gps
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>
