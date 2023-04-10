@@ -75,6 +75,17 @@ public class TraceProvider implements TraceApi {
     }
 
     @Override
+    public ResponseMessage getTraceTripAcc(
+            @RequestParam(value = "deviceNum") String deviceNum,
+            @RequestParam(value = "beginTime") Date beginTime,
+            @RequestParam(value = "endTime") Date endTime,
+            @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
+            @RequestParam(value = "includeAddress", required = false, defaultValue = "0") Integer includeAddress,
+            @RequestParam(value = "order", required = false, defaultValue = "0") Integer order) {
+        return ResponseMessage.ok();
+    }
+
+    @Override
     public ResponseMessage checkInArea(@Valid @RequestBody GpsAreaQuery[] queries) {
         // add by zhjd 20220512 start
         String invalidNum = deviceService.getInvalidDeviceNum(RequestHelper.getClientId(),

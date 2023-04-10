@@ -2,6 +2,7 @@ package com.diditech.iov.gps.api.trace;
 
 import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.trace.entity.GpsAreaQuery;
+import com.diditech.iov.gps.api.trace.entity.TripAcc;
 import com.diditech.iov.gps.api.trace.entity.TripCalculate;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +71,29 @@ public interface TraceApi {
             @RequestParam(value = "minNoDataDuration ", required = false, defaultValue = "900") Integer minNoDataDuration,
             @RequestParam(value = "includeAddress", required = false, defaultValue = "0") Integer includeAddress,
             @RequestParam(value = "order", required = false, defaultValue = "0") Integer order);
+
+
+    /**
+     * 轨迹点火熄火分段
+     * @param deviceNum      设备
+     * @param beginTime      定位时间 开始时间 兼容多种格式
+     * @param endTime        定位时间 结束时间 兼容多种格式
+     * @param coorType       非必填，坐标系，默认bd09（百度），其他：gcj02（国测），wgs84（原始）
+     * @param includeAddress 非必填，是否需要返回地址，1是0否，默认0
+     * @param order          非必填，排序策略，默认0，按gps正序，1按gps倒序
+     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值为 List&lt;{@link TripAcc}&gt;
+     * @date 2023/4/10
+     * @author zhjd
+     */
+    @GetMapping("/trip/acc")
+    ResponseMessage getTraceTripAcc(
+            @RequestParam(value = "deviceNum") String deviceNum,
+            @RequestParam(value = "beginTime") Date beginTime,
+            @RequestParam(value = "endTime") Date endTime,
+            @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
+            @RequestParam(value = "includeAddress", required = false, defaultValue = "0") Integer includeAddress,
+            @RequestParam(value = "order", required = false, defaultValue = "0") Integer order);
+
 
     /**
      * 根据时间段内轨迹判断是否进出某区域
