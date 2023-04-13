@@ -69,7 +69,8 @@ public class GpsCassandraImpl implements GpsDao {
             " %s " +
             " OBD_SPEED AS obdSpeed,\n" +
             " SPEED AS speed,\n" +
-            " TOTAL_MILEAGE AS totalMileage" +
+            " TOTAL_MILEAGE AS totalMileage,\n" +
+            " ACC \n" + // add by zhjd 查询增加点火字段
             " FROM %s \n" +
             " WHERE \n" +
             " DEVICE_NUM='%s'\n" +

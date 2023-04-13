@@ -1,7 +1,7 @@
 package com.diditech.iov.gps.app.trace.srv;
 
 import com.diditech.iov.gps.api.trace.entity.CoordinateType;
-import com.diditech.iov.gps.api.trace.entity.TripCalculate;
+import com.diditech.iov.gps.api.trace.entity.TripGps;
 import com.diditech.iov.gps.app.trace.po.GpsEntity;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +90,7 @@ public class TraceRequest {
             return this;
         }
 
-        public List<TripCalculate> getTrips() {
+        public List<TripGps> getTrips() {
             TraceRequest request = new TraceRequest();
             request.deviceNum = this.deviceNum;
             request.beginTime = this.beginTime;
@@ -100,7 +100,7 @@ public class TraceRequest {
             request.minTripDistance = this.minTripDistance;
             request.includeAddress = this.includeAddress;
             request.order = this.order;
-            return trace.getTraceTrip(request);
+            return trace.getTripGps(request);
         }
 
         public GpsEntity getGps() {

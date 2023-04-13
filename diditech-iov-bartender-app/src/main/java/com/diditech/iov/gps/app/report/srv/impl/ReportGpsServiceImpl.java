@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.diditech.iov.gps.api.report.domain.ReportGpsData;
 import com.diditech.iov.gps.api.trace.entity.CoordinateType;
-import com.diditech.iov.gps.api.trace.entity.TripCalculate;
+import com.diditech.iov.gps.api.trace.entity.TripGps;
 import com.diditech.iov.gps.app.core.util.MapUtil;
 import com.diditech.iov.gps.app.report.po.RptDayGps;
 import com.diditech.iov.gps.app.report.po.RptDayGpsExample;
@@ -343,7 +343,7 @@ public class ReportGpsServiceImpl implements ReportGpsService {
                                                 Date beginTime,
                                                 Date endTime,
                                                 String coorType) {
-        List<TripCalculate> tripCalculates = TraceRequest.Builder
+        List<TripGps> tripCalculates = TraceRequest.Builder
                 .create(deviceNum, beginTime, endTime)
                 .coorType(coorType)
                 .getTrips();
@@ -351,13 +351,13 @@ public class ReportGpsServiceImpl implements ReportGpsService {
             return null;
         }
         ReportGpsData gps = new ReportGpsData();
-        TripCalculate finalTrip = tripCalculates.get(tripCalculates.size() - 1);
+        TripGps finalTrip = tripCalculates.get(tripCalculates.size() - 1);
         BeanUtil.copyProperties(finalTrip, gps);
         gps.setGpsTime(finalTrip.getEndTime());
         gps.setLat(finalTrip.getEndLat());
         gps.setLng(finalTrip.getEndLng());
         gps.setAddress(finalTrip.getEndAddress());
-        gps.setFuelConsumption(tripCalculates.stream().mapToInt(TripCalculate::getFuelConsumption).sum());
+        gps.setFuelConsumption(tripCalculates.stream().mapToInt(TripGps::getFuelConsumption).sum());
         gps.setMileage(tripCalculates.stream().mapToDouble(item -> item.getMileage().doubleValue()).sum());
         return gps;
     }

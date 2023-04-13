@@ -20,5 +20,4 @@ public class GpsSearchCondition {
 
     private String endTime;
 
-    private String wifiFlag; // add for wiredevice without power by zhjd 20180412
 }

@@ -13,6 +13,7 @@ import com.diditech.utils.Coordinate;
 import com.diditech.utils.GISFixUtil;
 import com.spatial4j.core.io.GeohashUtils;
 import dd.utils.GPSUtil;
+import dd.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -78,6 +79,15 @@ public class GeoService implements GeoServiceI {
                 .collect(Collectors.toList());
 
         return String.join(Const.SEP_COMMA, addressList);
+    }
+
+    @Override
+    public List<String> geoBatchReturnList(String reqStr, String coorType) {
+        if (Util.isEmpty(reqStr)) {
+            return null;
+        }
+        String addressResult = geoBatch(reqStr, coorType);
+        return Arrays.asList(addressResult.split(StrUtil.COMMA));
     }
 
     private String getAddress(double lat, double lng) {

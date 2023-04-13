@@ -2,7 +2,7 @@ server:
   port: 8012
 spring:
   profiles:
-    active: prod
+    active: dev
 
 # 指定logfile端点的日志位置，有以下两个用途
 # 1.使用actuator的logfile端点访问到日志文件

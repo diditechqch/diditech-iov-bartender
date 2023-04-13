@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ReportStopsServiceImpl
-        extends TripServiceBase<ReportStopData, RptStops>
+        extends ReportTripServiceBase<ReportStopData, RptStops>
         implements ReportStopsService {
 
     @Autowired
@@ -76,7 +76,22 @@ public class ReportStopsServiceImpl
                                                                 Integer minDuration,
                                                                 Double minDistance,
                                                                 Map<String, List<ReportStopData>> historyMap) {
+        return loadDynamicTrip(endTime, coorType, minDuration, historyMap);
+    }
 
+    @Override
+    protected List<RptStops> selectEntity(List<String> deviceNumList,
+                                          Date fromTime,
+                                          Date toTime,
+                                          Integer minDuration,
+                                          Double minDistance) {
+        return selectEntity(deviceNumList, fromTime, toTime, minDuration);
+    }
+
+    private Map<String, List<ReportStopData>> loadDynamicTrip(Date endTime,
+                                                              String coorType,
+                                                              Integer minDuration,
+                                                              Map<String, List<ReportStopData>> historyMap) {
         // 查询最新分段动态数据
         Map<String, List<ReportTripsData>> tripMap
                 = historyMap.keySet().stream()
@@ -114,12 +129,10 @@ public class ReportStopsServiceImpl
         return historyMap;
     }
 
-    @Override
-    protected List<RptStops> selectEntity(List<String> deviceNumList,
-                                          Date fromTime,
-                                          Date toTime,
-                                          Integer minDuration,
-                                          Double minDistance) {
+    private List<RptStops> selectEntity(List<String> deviceNumList,
+                                        Date fromTime,
+                                        Date toTime,
+                                        Integer minDuration) {
         RptStopsExample example = new RptStopsExample();
         example.createCriteria()
                 .andDeviceNumIn(deviceNumList)

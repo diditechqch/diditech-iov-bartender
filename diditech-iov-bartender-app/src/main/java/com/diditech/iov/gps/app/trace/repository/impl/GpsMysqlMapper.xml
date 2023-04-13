@@ -57,6 +57,7 @@
             CREATE_TIME AS createTime,
             ${coordinate}
             ORI_MILEAGE AS oriMileage,
+            ACC,
             CASE
                 WHEN OBD_SPEED IS NOT NULL and OBD_SPEED!='' THEN OBD_SPEED ELSE SPEED
                 END AS speed

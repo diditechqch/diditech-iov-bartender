@@ -7,6 +7,7 @@ import dd.monitor.dm.device.IDecodeFilter;
 import dd.monitor.dm.device.IDevice;
 import dd.monitor.dm.device.RodimusServiceUtil;
 import dd.monitor.dm.model.DeviceData;
+import dd.monitor.dm.model.KEY;
 import dd.monitor.dm.util.Const;
 import dd.utils.Util;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +92,7 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         IDecodeFilter[] decodeFilterList = filters.get(protocolType).getDecodeFilters();
         try {
             devicedata.setDecoded(false);
-            devicedata.add(DeviceData.KEY_DEVICE_TYPE, protocolType);
+            devicedata.add(KEY.DEVICE_TYPE, protocolType);
             ChannelBuffer bytes = RodimusServiceUtil.transcode(rawMessage, protocolType, decodeFilterList, transcodeDevices, transcodeRule);
             for (IDecodeFilter f : decodeFilterList) {
                 f.doFilter(devicedata, bytes);
@@ -103,9 +104,9 @@ public class DeviceDataServiceImpl implements DeviceDataService {
             log.error("解析错误:" + rawMessage, ex);
             return new DeviceData();
         }
-        Object reportCode = devicedata.get(DeviceData.KEY_REPORT_TYPE);
+        Object reportCode = devicedata.get(KEY.REPORT_TYPE);
         if (reportCode != null) {
-            devicedata.add(DeviceData.KEY_REPORT_TYPE, DecodeUtil.getReportTypeDesc(reportCode));
+            devicedata.add(KEY.REPORT_TYPE, DecodeUtil.getReportTypeDesc(reportCode));
         }
         String btsInfo = getBtsInfo(devicedata);
         if (!Util.isEmpty(btsInfo)) {
@@ -123,22 +124,22 @@ public class DeviceDataServiceImpl implements DeviceDataService {
     private String getBtsInfo(DeviceData devicedata) {
         int count = 0;
         StringBuilder bts = new StringBuilder();
-        if (devicedata.get(DeviceData.KEY_LAC) != null) {
-            bts.append(DeviceData.KEY_LAC);
+        if (devicedata.get(KEY.LAC) != null) {
+            bts.append(KEY.LAC);
             bts.append(Const.SEP_EQUAL);
-            bts.append(devicedata.get(DeviceData.KEY_LAC));
+            bts.append(devicedata.get(KEY.LAC));
             bts.append(Const.SEP_COMMA);
         }
-        if (devicedata.get(DeviceData.KEY_CELL_ID) != null) {
-            bts.append(DeviceData.KEY_CELL_ID);
+        if (devicedata.get(KEY.CELL_ID) != null) {
+            bts.append(KEY.CELL_ID);
             bts.append(Const.SEP_EQUAL);
-            bts.append(devicedata.get(DeviceData.KEY_CELL_ID));
+            bts.append(devicedata.get(KEY.CELL_ID));
             bts.append(Const.SEP_COMMA);
         }
-        if (devicedata.get(DeviceData.KEY_CELL_DBM) != null) {
-            bts.append(DeviceData.KEY_CELL_DBM);
+        if (devicedata.get(KEY.CELL_DBM) != null) {
+            bts.append(KEY.CELL_DBM);
             bts.append(Const.SEP_EQUAL);
-            bts.append(devicedata.get(DeviceData.KEY_CELL_DBM));
+            bts.append(devicedata.get(KEY.CELL_DBM));
         }
         if (bts.length() > 0) {
             bts.append(Const.SEP_FILE);
@@ -149,24 +150,24 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         boolean hasNearBts;
         for (int i = 1; i <= 6; i++) {
             hasNearBts = false;
-            if (devicedata.get(DeviceData.KEY_LAC + i) != null) {
-                nearbts.append(DeviceData.KEY_LAC).append(i);
+            if (devicedata.get(KEY.LAC + i) != null) {
+                nearbts.append(KEY.LAC).append(i);
                 nearbts.append(Const.SEP_EQUAL);
-                nearbts.append(devicedata.get(DeviceData.KEY_LAC + i));
+                nearbts.append(devicedata.get(KEY.LAC + i));
                 nearbts.append(Const.SEP_COMMA);
                 hasNearBts = true;
             }
-            if (devicedata.get(DeviceData.KEY_CELL_ID + i) != null) {
-                nearbts.append(DeviceData.KEY_CELL_ID).append(i);
+            if (devicedata.get(KEY.CELL_ID + i) != null) {
+                nearbts.append(KEY.CELL_ID).append(i);
                 nearbts.append(Const.SEP_EQUAL);
-                nearbts.append(devicedata.get(DeviceData.KEY_CELL_ID + i));
+                nearbts.append(devicedata.get(KEY.CELL_ID + i));
                 nearbts.append(Const.SEP_COMMA);
                 hasNearBts = true;
             }
-            if (devicedata.get(DeviceData.KEY_CELL_DBM + i) != null) {
-                nearbts.append(DeviceData.KEY_CELL_DBM).append(i);
+            if (devicedata.get(KEY.CELL_DBM + i) != null) {
+                nearbts.append(KEY.CELL_DBM).append(i);
                 nearbts.append(Const.SEP_EQUAL);
-                nearbts.append(!Util.isNull(devicedata.get(DeviceData.KEY_CELL_DBM + i)) ? devicedata.get(DeviceData.KEY_CELL_DBM + i) : "");
+                nearbts.append(!Util.isNull(devicedata.get(KEY.CELL_DBM + i)) ? devicedata.get(KEY.CELL_DBM + i) : "");
                 hasNearBts = true;
             }
             if (hasNearBts && nearbts.length() > 0) {
@@ -196,7 +197,7 @@ public class DeviceDataServiceImpl implements DeviceDataService {
                 .filter(item -> item.length() > 0)
                 .toArray(String[]::new);
         packageData.setDetails(details);
-        packageData.setPackageType(Util.asString(dd.get(DeviceData.KEY_DATA_TYPE)));
+        packageData.setPackageType(Util.asString(dd.get(KEY.DATA_TYPE)));
         return packageData;
     }
 
@@ -214,7 +215,7 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         String[] subData = subPackageData.stream().flatMap(Arrays::stream).toArray(String[]::new);
         PackageData packageData = new PackageData();
         packageData.setDetails(subData);
-        packageData.setPackageType(Util.asString(devicedata.get(DeviceData.KEY_DATA_TYPE)));
+        packageData.setPackageType(Util.asString(devicedata.get(KEY.DATA_TYPE)));
         return packageData;
     }
 
@@ -239,9 +240,9 @@ public class DeviceDataServiceImpl implements DeviceDataService {
     }
 
     public void getSignalDesc(DeviceData dd) {
-        Object signalLvl = dd.get(DeviceData.KEY_SIGNAL_LEVEL);
+        Object signalLvl = dd.get(KEY.SIGNAL_LEVEL);
         if (!Util.isEmpty(signalLvl)) {
-            dd.add(DeviceData.KEY_SIGNAL_LEVEL, DecodeUtil.getSignalDesc(signalLvl));
+            dd.add(KEY.SIGNAL_LEVEL, DecodeUtil.getSignalDesc(signalLvl));
         }
     }
 }

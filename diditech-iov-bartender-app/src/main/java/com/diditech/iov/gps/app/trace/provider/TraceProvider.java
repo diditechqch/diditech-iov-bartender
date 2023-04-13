@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.trace.TraceApi;
 import com.diditech.iov.gps.api.trace.entity.GpsAreaQuery;
-import com.diditech.iov.gps.api.trace.entity.TripCalculate;
+import com.diditech.iov.gps.api.trace.entity.TripGps;
 import com.diditech.iov.gps.app.core.aspect.RequestHelper;
 import com.diditech.iov.gps.app.core.service.CoreService;
 import com.diditech.iov.gps.app.core.util.Const;
@@ -66,7 +66,7 @@ public class TraceProvider implements TraceApi {
             @RequestParam(value = "minNoDataDuration ", required = false, defaultValue = "900") Integer minNoDataDuration,
             @RequestParam(value = "includeAddress", required = false, defaultValue = "0") Integer includeAddress,
             @RequestParam(value = "order", required = false, defaultValue = "0") Integer order) {
-        List<TripCalculate> trips = traceService.getTraceTrip(deviceNum, beginTime, endTime,
+        List<TripGps> trips = traceService.getTrip(deviceNum, beginTime, endTime,
                 coorType, minNoDataDuration, minTripDistance, includeAddress, order);
         if (CollUtil.isEmpty(trips)) {
             return ResponseMessage.ok();
@@ -80,9 +80,15 @@ public class TraceProvider implements TraceApi {
             @RequestParam(value = "beginTime") Date beginTime,
             @RequestParam(value = "endTime") Date endTime,
             @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
+            @RequestParam(value = "minTripDistance ", required = false, defaultValue = "0.01") Double minTripDistance,
             @RequestParam(value = "includeAddress", required = false, defaultValue = "0") Integer includeAddress,
             @RequestParam(value = "order", required = false, defaultValue = "0") Integer order) {
-        return ResponseMessage.ok();
+        List<TripGps> trips = traceService.getTrip(deviceNum, beginTime, endTime,
+                coorType, null, minTripDistance, includeAddress, order);
+        if (CollUtil.isEmpty(trips)) {
+            return ResponseMessage.ok();
+        }
+        return ResponseMessage.ok(trips);
     }
 
     @Override

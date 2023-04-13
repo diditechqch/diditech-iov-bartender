@@ -55,4 +55,9 @@ public class GpsInfoTripMin implements Serializable {
      */
     private BigDecimal oriMileage;
 
+    /**
+     * 点火熄火状态，1点火0熄火 20230412
+     */
+    private Integer acc;
+
 }

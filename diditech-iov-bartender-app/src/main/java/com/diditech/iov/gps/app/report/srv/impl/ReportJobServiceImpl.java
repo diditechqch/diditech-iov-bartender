@@ -102,7 +102,7 @@ public class ReportJobServiceImpl implements ReportJobService {
             if (lastTrip != null) {
                 // 判断是否需要与历史分段合并
                 mergeLastTrip = DateUtil.between(lastTrip.getEndTime(),
-                        trips.get(0).getStartTime(), DateUnit.SECOND) <= TripServiceBase.minNoDataDuration;
+                        trips.get(0).getStartTime(), DateUnit.SECOND) <= ReportTripServiceBase.minNoDataDuration;
             }
 
             tripsService.saveTrip(trips, mergeLastTrip, lastTrip);

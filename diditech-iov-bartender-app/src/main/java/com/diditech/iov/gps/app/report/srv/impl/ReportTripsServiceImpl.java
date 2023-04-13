@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.diditech.iov.gps.api.report.domain.ReportTripsData;
 import com.diditech.iov.gps.api.trace.entity.CoordinateType;
-import com.diditech.iov.gps.api.trace.entity.TripCalculate;
+import com.diditech.iov.gps.api.trace.entity.TripGps;
 import com.diditech.iov.gps.app.report.po.RptTrips;
 import com.diditech.iov.gps.app.report.po.RptTripsExample;
 import com.diditech.iov.gps.app.report.repository.RptMapper;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ReportTripsServiceImpl
-        extends TripServiceBase<ReportTripsData, RptTrips>
+        extends ReportTripServiceBase<ReportTripsData, RptTrips>
         implements ReportTripsService {
 
     @Autowired
@@ -81,7 +81,7 @@ public class ReportTripsServiceImpl
 
     @Override
     public List<RptTrips> buildRptTripListByDynamicTrip(String deviceNum, Date start, Date end) {
-        List<TripCalculate> tripCalculates = TraceRequest.Builder
+        List<TripGps> tripCalculates = TraceRequest.Builder
                 .create(deviceNum, start, end)
                 .getTrips();
         if (CollUtil.isEmpty(tripCalculates)) {
@@ -111,7 +111,7 @@ public class ReportTripsServiceImpl
 
     @Override
     public RptTrips rebuildRptTripByTime(RptTrips rptTrip) {
-        List<TripCalculate> tripCalculates = TraceRequest.Builder
+        List<TripGps> tripCalculates = TraceRequest.Builder
                 .create(rptTrip.getDeviceNum(), rptTrip.getStartTime(), rptTrip.getEndTime())
                 .minTripDistance(0D)
                 .getTrips();
@@ -184,7 +184,7 @@ public class ReportTripsServiceImpl
      * @date 2023/3/23
      * @author zhjd
      */
-    private RptTrips buildRptTripByDynamicTrip(TripCalculate entity) {
+    private RptTrips buildRptTripByDynamicTrip(TripGps entity) {
         RptTrips rpt = new RptTrips();
         BeanUtil.copyProperties(entity, rpt);
         rpt.setDayTag(DateUtil.format(entity.getStartTime(), Util.STR_DATE_FORMAT));
@@ -223,7 +223,7 @@ public class ReportTripsServiceImpl
                                                               Date start,
                                                               Date end,
                                                               String coorType) {
-        List<TripCalculate> tripCalculates = TraceRequest.Builder
+        List<TripGps> tripCalculates = TraceRequest.Builder
                 .create(deviceNum, start, end)
                 .coorType(coorType)
                 .getTrips();

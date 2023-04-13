@@ -2,8 +2,7 @@ package com.diditech.iov.gps.api.trace;
 
 import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.trace.entity.GpsAreaQuery;
-import com.diditech.iov.gps.api.trace.entity.TripAcc;
-import com.diditech.iov.gps.api.trace.entity.TripCalculate;
+import com.diditech.iov.gps.api.trace.entity.TripGps;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -57,7 +56,7 @@ public interface TraceApi {
      * @param minNoDataDuration 非必填，Gaps in reported positions longer than the value are considered as stops. Default 900 second.
      * @param includeAddress    非必填，是否需要返回地址，1是0否，默认0
      * @param order             非必填，排序策略，默认0，按gps正序，1按gps倒序
-     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值为 List&lt;{@link TripCalculate}&gt;
+     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值为 List&lt;{@link TripGps}&gt;
      * @date 2021/3/2
      * @author zhjd
      */
@@ -81,7 +80,7 @@ public interface TraceApi {
      * @param coorType       非必填，坐标系，默认bd09（百度），其他：gcj02（国测），wgs84（原始）
      * @param includeAddress 非必填，是否需要返回地址，1是0否，默认0
      * @param order          非必填，排序策略，默认0，按gps正序，1按gps倒序
-     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值为 List&lt;{@link TripAcc}&gt;
+     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值为 List&lt;{@link TripGps}&gt;
      * @date 2023/4/10
      * @author zhjd
      */
@@ -91,6 +90,7 @@ public interface TraceApi {
             @RequestParam(value = "beginTime") Date beginTime,
             @RequestParam(value = "endTime") Date endTime,
             @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
+            @RequestParam(value = "minTripDistance ", required = false, defaultValue = "0.01") Double minTripDistance,
             @RequestParam(value = "includeAddress", required = false, defaultValue = "0") Integer includeAddress,
             @RequestParam(value = "order", required = false, defaultValue = "0") Integer order);
 

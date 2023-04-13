@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author zhjd <br>
  * @date 2023/3/14 <br>
  */
-public abstract class TripServiceBase<T extends ReportTripsDataBase, V extends RptTripsKey> {
+public abstract class ReportTripServiceBase<T extends ReportTripsDataBase, V extends RptTripsKey> {
 
     static final int minNoDataDuration = 900;
 
