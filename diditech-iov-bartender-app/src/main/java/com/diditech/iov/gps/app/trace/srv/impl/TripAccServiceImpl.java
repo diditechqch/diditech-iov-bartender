@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.diditech.iov.gps.api.trace.entity.GpsInfoTripMin;
 import com.diditech.iov.gps.api.trace.entity.TripAcc;
 import com.diditech.iov.gps.app.trace.srv.TripServiceBase;
+import dd.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -52,25 +53,44 @@ public class TripAccServiceImpl extends TripServiceBase<TripAcc> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 以点火为分段开始，以熄火为结束，若全程acc不变，则将所有查询所得轨迹视为一段
+     * @date 2023/4/14
+     * @author zhjd
+     */
     private List<List<GpsInfoTripMin>> splitTrips(List<GpsInfoTripMin> gpsList) {
+        List<GpsInfoTripMin> accGpsList = gpsList.stream()
+                .filter(item -> item.getAcc() != null)
+                .collect(Collectors.toList());
+
         List<List<GpsInfoTripMin>> tripList = new ArrayList<>();
+
+        if (CollUtil.isEmpty(accGpsList)) {
+            tripList.add(gpsList);
+            return tripList;
+        }
+
         GpsInfoTripMin before;
         GpsInfoTripMin after = null;
         int startIdx = 0;
-        for (int i = 0; (startIdx < gpsList.size() - 1 && i < gpsList.size() - 1); i++) {
-            before = gpsList.get(i);
-            after = gpsList.get(i + 1);
-            if (before.getAcc().intValue() != after.getAcc().intValue()) {
-                if (after.getAcc().intValue() > 0) {
+        for (int i = 0; (startIdx < accGpsList.size() - 1 && i < accGpsList.size() - 1); i++) {
+            before = accGpsList.get(i);
+            after = accGpsList.get(i + 1);
+            if (Util.asInt(before.getAcc()) != Util.asInt(after.getAcc())) {
+                if (Util.asInt(after.getAcc()) > 0) {
                     startIdx = i + 1;
                     continue;
                 }
-                tripList.add(gpsList.subList(startIdx, i + 1));
+                tripList.add(accGpsList.subList(startIdx, i + 1));
                 startIdx = i + 1;
             }
         }
-        if (startIdx < gpsList.size() - 1 && after != null && after.getAcc().intValue() > 0) {
-            tripList.add(gpsList.subList(startIdx, gpsList.size()));
+        if (startIdx < accGpsList.size() - 1 && after != null && Util.asInt(after.getAcc()) > 0) {
+            tripList.add(accGpsList.subList(startIdx, accGpsList.size()));
+        }
+
+        if (CollUtil.isEmpty(tripList)) {
+            tripList.add(gpsList);
         }
         return tripList;
     }
