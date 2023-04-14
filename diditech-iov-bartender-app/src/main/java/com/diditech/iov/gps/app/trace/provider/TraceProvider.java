@@ -63,7 +63,7 @@ public class TraceProvider implements TraceApi {
             @RequestParam(value = "endTime") Date endTime,
             @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
             @RequestParam(value = "minTripDistance ", required = false, defaultValue = "0.01") Double minTripDistance,
-            @RequestParam(value = "minNoDataDuration ", required = false, defaultValue = "900") Integer minNoDataDuration,
+            @RequestParam(value = "minNoDataDuration ", required = false, defaultValue = "600") Integer minNoDataDuration,
             @RequestParam(value = "includeAddress", required = false, defaultValue = "0") Integer includeAddress,
             @RequestParam(value = "order", required = false, defaultValue = "0") Integer order) {
         List<TripGps> trips = traceService.getTrip(deviceNum, beginTime, endTime,
