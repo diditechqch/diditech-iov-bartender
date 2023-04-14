@@ -52,7 +52,7 @@ public class TripGpsServiceImpl extends TripServiceBase<TripGps> {
         List<GpsInfoTripMin> drivingList = traceList.stream()
                 .filter(item -> (item.getObdSpeed() != null && item.getObdSpeed() > 5) || item.getSpeed() > 5)
                 .collect(Collectors.toList());
-        List<List<GpsInfoTripMin>> tripList = splitTrips(drivingList);
+        List<List<GpsInfoTripMin>> tripList = splitTrips(drivingList, minNoDataDuration);
         return tripList.stream()
                 .map(item -> buildTrip(item, deviceNum, TripGps.class))
                 .collect(Collectors.toList());
