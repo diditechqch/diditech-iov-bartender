@@ -1,5 +1,6 @@
 package com.diditech.iov.gps.api.report.domain;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
@@ -45,4 +46,24 @@ public class ReportGpsData {
      * 地址
      */
     private String address;
+    /**
+     * 方向
+     */
+    private String direction;
+
+    /**
+     * 是否点火
+     */
+    private Boolean isAccOn;
+    /**
+     * 是否行驶
+     */
+    private Boolean isMoving;
+
+    public void buildStatus() {
+        String status = isMoving ? "行驶" : "停车";
+        status += StrUtil.SPACE;
+        status += isMoving ? "点火" : "熄火";
+        this.status = status;
+    }
 }

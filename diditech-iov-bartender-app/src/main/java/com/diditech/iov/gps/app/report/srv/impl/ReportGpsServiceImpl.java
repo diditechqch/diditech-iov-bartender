@@ -5,11 +5,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.diditech.iov.gps.api.report.domain.ReportGpsData;
 import com.diditech.iov.gps.api.trace.entity.CoordinateType;
 import com.diditech.iov.gps.api.trace.entity.TripGps;
+import com.diditech.iov.gps.app.core.util.Const;
 import com.diditech.iov.gps.app.core.util.MapUtil;
 import com.diditech.iov.gps.app.report.po.RptDayGps;
 import com.diditech.iov.gps.app.report.po.RptDayGpsExample;
@@ -163,7 +163,7 @@ public class ReportGpsServiceImpl implements ReportGpsService {
         }
         return deviceRptDayGpsMap.keySet().stream()
                 .map(deviceRptDayGpsMap::get)
-                .map(list -> buildReportGpsData(list, coorType))
+                .map(list -> buildReportGpsData(list, CoordinateType.get(coorType)))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
@@ -200,11 +200,21 @@ public class ReportGpsServiceImpl implements ReportGpsService {
             log.error("查询轨迹失败");
             return data;
         }
-        data.setIsmoving((byte) (com.diditech.utils.Util.asInt(gps.getSpeed()) > 5 ? 1 : 0));
+        data.setIsmoving((byte) (Util.asInt(gps.getSpeed()) > 5 ? 1 : 0));
         BeanUtil.copyProperties(gps, data);
-        data.setLocMode((byte) com.diditech.utils.Util.asInt(gps.getLocMode()));
-        data.setGpsTime(DateUtil.parse(gps.getGpsTime(), com.diditech.utils.Util.STR_SHORT_DT_FORMAT));
+        data.setLocMode((byte) Util.asInt(gps.getLocMode()));
+        data.setGpsTime(DateUtil.parse(gps.getGpsTime(), Util.STR_SHORT_DT_FORMAT));
+        data.setIsmoving((byte) gps.getIsmoving());
+        data.setAlmAccon((byte) Util.asInt(gps.getAlmAccon()));
+        buildStatus(data);
         return data;
+    }
+
+    private void buildStatus(RptDayGps data) {
+        String status = Util.asInt(data.getIsmoving()) > 0 ? "行驶" : "停车";
+        status += Const.SPACE;
+        status += Util.asInt(data.getAlmAccon()) > 0 ? "点火" : "熄火";
+        data.setStatus(status);
     }
 
     /**
@@ -384,21 +394,25 @@ public class ReportGpsServiceImpl implements ReportGpsService {
      * @date 2023/3/23
      * @author zhjd
      */
-    private List<ReportGpsData> buildReportGpsData(List<RptDayGps> list, String coorType) {
+    private List<ReportGpsData> buildReportGpsData(List<RptDayGps> list, CoordinateType coorType) {
         return list.stream()
                 .map(entity -> {
                     ReportGpsData gps = new ReportGpsData();
                     BeanUtil.copyProperties(entity, gps);
                     gps.setDayTag(gps.getGpsTime());
-                    if (StrUtil.equalsIgnoreCase(CoordinateType.BD09.name(), coorType)) {
+                    if (CoordinateType.BD09 == coorType) {
                         gps.setLng(entity.getLngBd().doubleValue());
                         gps.setLat(entity.getLatBd().doubleValue());
                     }
-                    if (StrUtil.equalsIgnoreCase(CoordinateType.GCJ02.name(), coorType)) {
+                    if (CoordinateType.GCJ02 == coorType) {
                         gps.setLng(entity.getLngGc().doubleValue());
                         gps.setLat(entity.getLatGc().doubleValue());
                     }
                     gps.setMileage(entity.getDayMileage().doubleValue());
+                    gps.setIsMoving(Util.asInt(entity.getIsmoving()) > 0);
+                    gps.setIsAccOn(Util.asInt(entity.getAlmAccon()) > 0);
+                    gps.setDirection(entity.getDirectionName());
+                    gps.buildStatus();
                     return gps;
                 })
                 .collect(Collectors.toList());

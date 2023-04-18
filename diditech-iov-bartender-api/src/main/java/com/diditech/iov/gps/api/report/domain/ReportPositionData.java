@@ -1,5 +1,6 @@
 package com.diditech.iov.gps.api.report.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,10 +16,12 @@ public class ReportPositionData {
     /**
      * 定位时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date gpsTime;
     /**
      * 接收时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date receiveTime;
     /**
      * 纬度，坐标系根据请求返回
@@ -40,6 +43,7 @@ public class ReportPositionData {
      * 是否定位
      */
     private Boolean isValid;
+
     /**
      * 是否点火
      */
@@ -48,6 +52,7 @@ public class ReportPositionData {
      * 是否行驶
      */
     private Boolean isMoving;
+
     /**
      * 是否离线
      */

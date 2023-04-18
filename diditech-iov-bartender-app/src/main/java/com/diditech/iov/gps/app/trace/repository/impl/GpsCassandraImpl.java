@@ -90,6 +90,7 @@ public class GpsCassandraImpl implements GpsDao {
             " SPEED,\n" +
             " OBD_SPEED AS obdSpeed,\n" +
             " ACC,\n" +
+            " DIRECTION_NAME AS directionName,\n" +
             " OBD_ACC AS obdAcc,\n" +
             " OBD_MESSAGE AS locMode\n" +
             " FROM %s\n" +
@@ -158,7 +159,7 @@ public class GpsCassandraImpl implements GpsDao {
                 .filter(item -> !ObjectUtils.isEmpty(item.getLng()) && !ObjectUtils.isEmpty(item.getLat()))
                 .peek(detail -> {
                     detail.setSpeed(ObjectUtils.isEmpty(detail.getObdSpeed()) ? detail.getSpeed() : detail.getObdSpeed());
-                    detail.setAlmAccon(ObjectUtils.isEmpty(detail.getObdAcc()) ? detail.getAcc() : detail.getObdAcc());
+                    detail.setAlmAccon(ObjectUtils.isEmpty(detail.getObdAcc()) ? detail.getAcc() : detail.getObdAcc()); // TODO obdacc已废弃
                 })
                 .collect(Collectors.toList())
                 .get(0);

@@ -54,4 +54,6 @@ public class GpsEntity {
     private int ismoving;
 
     private String locMode;
+
+    private String directionName;
 }

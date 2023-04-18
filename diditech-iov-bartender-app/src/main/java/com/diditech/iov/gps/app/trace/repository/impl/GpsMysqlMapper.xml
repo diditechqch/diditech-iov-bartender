@@ -81,6 +81,7 @@
             LAT_GC AS latGc,
             IF( OBD_SPEED IS NOT NULL, OBD_SPEED, SPEED ) AS speed,
             IF( OBD_ACC IS NOT NULL, OBD_ACC, ACC ) AS almAccon,
+            DIRECTION_NAME AS directionName,
             OBD_MESSAGE AS locMode
         FROM ${condition.gpsTable}
         WHERE DEVICE_NUM = ${condition.deviceNum}

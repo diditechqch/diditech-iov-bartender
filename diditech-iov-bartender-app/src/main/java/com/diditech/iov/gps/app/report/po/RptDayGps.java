@@ -30,6 +30,10 @@ public class RptDayGps extends RptDayGpsKey {
 
     private String address;
 
+    private String status;
+
+    private String directionName;
+
     public Date getGpsTime() {
         return gpsTime;
     }
@@ -132,5 +136,21 @@ public class RptDayGps extends RptDayGpsKey {
 
     public void setAddress(String address) {
         this.address = address == null ? null : address.trim();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+
+    public String getDirectionName() {
+        return directionName;
+    }
+
+    public void setDirectionName(String directionName) {
+        this.directionName = directionName == null ? null : directionName.trim();
     }
 }

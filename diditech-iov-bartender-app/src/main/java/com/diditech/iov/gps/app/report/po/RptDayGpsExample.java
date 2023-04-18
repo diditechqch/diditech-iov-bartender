@@ -1035,6 +1035,146 @@ public class RptDayGpsExample {
             addCriterion("ADDRESS not between", value1, value2, "address");
             return (Criteria) this;
         }
+
+        public Criteria andStatusIsNull() {
+            addCriterion("STATUS is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("STATUS is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(String value) {
+            addCriterion("STATUS =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(String value) {
+            addCriterion("STATUS <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(String value) {
+            addCriterion("STATUS >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("STATUS >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(String value) {
+            addCriterion("STATUS <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(String value) {
+            addCriterion("STATUS <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLike(String value) {
+            addCriterion("STATUS like", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotLike(String value) {
+            addCriterion("STATUS not like", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<String> values) {
+            addCriterion("STATUS in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<String> values) {
+            addCriterion("STATUS not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(String value1, String value2) {
+            addCriterion("STATUS between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(String value1, String value2) {
+            addCriterion("STATUS not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameIsNull() {
+            addCriterion("DIRECTION_NAME is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameIsNotNull() {
+            addCriterion("DIRECTION_NAME is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameEqualTo(String value) {
+            addCriterion("DIRECTION_NAME =", value, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameNotEqualTo(String value) {
+            addCriterion("DIRECTION_NAME <>", value, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameGreaterThan(String value) {
+            addCriterion("DIRECTION_NAME >", value, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameGreaterThanOrEqualTo(String value) {
+            addCriterion("DIRECTION_NAME >=", value, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameLessThan(String value) {
+            addCriterion("DIRECTION_NAME <", value, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameLessThanOrEqualTo(String value) {
+            addCriterion("DIRECTION_NAME <=", value, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameLike(String value) {
+            addCriterion("DIRECTION_NAME like", value, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameNotLike(String value) {
+            addCriterion("DIRECTION_NAME not like", value, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameIn(List<String> values) {
+            addCriterion("DIRECTION_NAME in", values, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameNotIn(List<String> values) {
+            addCriterion("DIRECTION_NAME not in", values, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameBetween(String value1, String value2) {
+            addCriterion("DIRECTION_NAME between", value1, value2, "directionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectionNameNotBetween(String value1, String value2) {
+            addCriterion("DIRECTION_NAME not between", value1, value2, "directionName");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

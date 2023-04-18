@@ -118,8 +118,8 @@ public interface ReportApi {
             @RequestBody String devices);
 
     /**
-     * 日里程查询<br>
-     * 返回设备按天统计日里程数据，若某日无上报则无该日数据
+     * 日报表<br>
+     * 返回设备按天统计日里程、油耗、最后定位状态数据，若某日无上报则无该日数据
      * @param beginTime 定位时间 开始时间 yyyy-MM-dd
      * @param endTime   定位时间 结束时间 yyyy-MM-dd
      * @param coorType  非必填，坐标系，默认bd09（百度），其他：gcj02（国测），wgs84（原始）
@@ -130,8 +130,8 @@ public interface ReportApi {
      * @date 2023/3/16
      * @author zhjd
      */
-    @PostMapping("/mileage/day")
-    ResponseMessage getMileageDayReport(
+    @PostMapping("/day")
+    ResponseMessage getDayReport(
             @RequestParam(value = "beginTime") Date beginTime,
             @RequestParam(value = "endTime") Date endTime,
             @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,

@@ -17,6 +17,8 @@
     <result column="ALM_ACCON" jdbcType="TINYINT" property="almAccon" />
     <result column="LOC_MODE" jdbcType="TINYINT" property="locMode" />
     <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+    <result column="DIRECTION_NAME" jdbcType="VARCHAR" property="directionName"/>
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -78,7 +80,7 @@
   </sql>
   <sql id="Base_Column_List">
     DEVICE_NUM, DAY_TAG, GPS_TIME, LAT, LNG, LAT_BD, LNG_BD, LAT_GC, LNG_GC, DAY_MILEAGE, 
-    FUEL_CONSUMPTION, ISMOVING, ALM_ACCON, LOC_MODE, ADDRESS
+    FUEL_CONSUMPTION, ISMOVING, ALM_ACCON, LOC_MODE, ADDRESS, STATUS, DIRECTION_NAME
   </sql>
   <select id="selectByExample" parameterType="com.diditech.iov.gps.app.report.po.RptDayGpsExample" resultMap="BaseResultMap">
     select
@@ -117,12 +119,14 @@
       LAT, LNG, LAT_BD, LNG_BD, 
       LAT_GC, LNG_GC, DAY_MILEAGE, 
       FUEL_CONSUMPTION, ISMOVING, ALM_ACCON, 
-      LOC_MODE, ADDRESS)
+      LOC_MODE, ADDRESS, STATUS, 
+      DIRECTION_NAME)
     values (#{deviceNum,jdbcType=VARCHAR}, #{dayTag,jdbcType=VARCHAR}, #{gpsTime,jdbcType=TIMESTAMP}, 
       #{lat,jdbcType=DECIMAL}, #{lng,jdbcType=DECIMAL}, #{latBd,jdbcType=DECIMAL}, #{lngBd,jdbcType=DECIMAL}, 
       #{latGc,jdbcType=DECIMAL}, #{lngGc,jdbcType=DECIMAL}, #{dayMileage,jdbcType=DECIMAL}, 
       #{fuelConsumption,jdbcType=INTEGER}, #{ismoving,jdbcType=TINYINT}, #{almAccon,jdbcType=TINYINT}, 
-      #{locMode,jdbcType=TINYINT}, #{address,jdbcType=VARCHAR})
+      #{locMode,jdbcType=TINYINT}, #{address,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{directionName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.diditech.iov.gps.app.report.po.RptDayGps">
     insert into dd_monitor.rpt_day_gps
@@ -172,6 +176,12 @@
       <if test="address != null">
         ADDRESS,
       </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="directionName != null">
+        DIRECTION_NAME,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="deviceNum != null">
@@ -218,6 +228,12 @@
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="directionName != null">
+        #{directionName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -275,6 +291,12 @@
       <if test="record.address != null">
         ADDRESS = #{record.address,jdbcType=VARCHAR},
       </if>
+      <if test="record.status != null">
+        STATUS = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.directionName != null">
+        DIRECTION_NAME = #{record.directionName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -295,8 +317,8 @@
       FUEL_CONSUMPTION = #{record.fuelConsumption,jdbcType=INTEGER},
       ISMOVING = #{record.ismoving,jdbcType=TINYINT},
       ALM_ACCON = #{record.almAccon,jdbcType=TINYINT},
-      LOC_MODE = #{record.locMode,jdbcType=TINYINT},
-      ADDRESS = #{record.address,jdbcType=VARCHAR}
+      LOC_MODE = #{record.locMode,jdbcType=TINYINT}, ADDRESS = #{record.address,jdbcType=VARCHAR}, STATUS =
+    #{record.status,jdbcType=VARCHAR}, DIRECTION_NAME = #{record.directionName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -343,6 +365,12 @@
       <if test="address != null">
         ADDRESS = #{address,jdbcType=VARCHAR},
       </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="directionName != null">
+        DIRECTION_NAME = #{directionName,jdbcType=VARCHAR},
+      </if>
     </set>
     where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR}
       and DAY_TAG = #{dayTag,jdbcType=VARCHAR}
@@ -361,7 +389,9 @@
       ISMOVING = #{ismoving,jdbcType=TINYINT},
       ALM_ACCON = #{almAccon,jdbcType=TINYINT},
       LOC_MODE = #{locMode,jdbcType=TINYINT},
-      ADDRESS = #{address,jdbcType=VARCHAR}
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      DIRECTION_NAME = #{directionName,jdbcType=VARCHAR}
     where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR}
       and DAY_TAG = #{dayTag,jdbcType=VARCHAR}
   </update>

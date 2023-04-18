@@ -169,7 +169,7 @@ public class ReportProvider implements ReportApi {
     }
 
     @Override
-    public ResponseMessage getMileageDayReport(
+    public ResponseMessage getDayReport(
             @RequestParam(value = "beginTime") Date beginTime,
             @RequestParam(value = "endTime") Date endTime,
             @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
