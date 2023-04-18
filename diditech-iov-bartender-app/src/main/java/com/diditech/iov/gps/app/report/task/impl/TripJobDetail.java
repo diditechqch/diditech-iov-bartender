@@ -6,8 +6,8 @@ import lombok.Data;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ExecutorService;
@@ -26,12 +26,12 @@ public class TripJobDetail extends AbstractJobDetail {
     private String cron;
     private int batchThreadNum;
 
-    @Bean("tripExecutor")
     public ExecutorService getExecutor() {
         return Executors.newFixedThreadPool(batchThreadNum);
     }
 
     @Autowired
+    @Qualifier("tripJobService")
     private ReportTripJobService jobService;
 
     @Override
@@ -42,7 +42,7 @@ public class TripJobDetail extends AbstractJobDetail {
     private class TripJob implements Job {
         @Override
         public void execute(JobExecutionContext context) {
-            jobService.doCronJob();
+            jobService.doCronJob(getExecutor());
         }
     }
 }

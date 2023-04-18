@@ -11,15 +11,12 @@ import com.diditech.iov.gps.app.report.srv.impl.ReportTripServiceBase;
 import com.diditech.iov.gps.app.report.task.ReportAccJobService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 /**
@@ -28,23 +25,14 @@ import java.util.stream.Collectors;
  * @date 2023/4/14 <br>
  */
 @Slf4j
-@Service
+@Service("accJobService")
 public class ReportAccJobServiceImpl extends ReportTripJobServiceImpl implements ReportAccJobService {
 
     @Autowired
     private RptMapper rptMapper;
 
     @Autowired
-    @Qualifier("accExecutor")
-    private ExecutorService executor;
-
-    @Autowired
     private ReportAccService accService;
-
-    @Override
-    protected Executor getExecutor() {
-        return executor;
-    }
 
     /**
      * 根据分段轨迹生成 行驶、停车报表，按设备管理事务

@@ -14,7 +14,6 @@ import com.diditech.iov.gps.app.report.srv.impl.ReportTripServiceBase;
 import com.diditech.iov.gps.app.report.task.ReportTripJobService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +22,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
@@ -33,20 +31,16 @@ import java.util.stream.Collectors;
  * @date 2023/3/24 <br>
  */
 @Slf4j
-@Service
+@Service("tripJobService")
 public class ReportTripJobServiceImpl implements ReportTripJobService {
 
-    private final int cronJobDayRange = 2;
+    private final int cronJobDayRange = 3;
 
     @Autowired
     private DeviceMapper deviceMapper;
 
     @Autowired
     private RptMapper rptMapper;
-
-    @Autowired
-    @Qualifier("tripExecutor")
-    private ExecutorService executor;
 
     @Autowired
     private ReportTripsService tripsService;
@@ -58,13 +52,16 @@ public class ReportTripJobServiceImpl implements ReportTripJobService {
     private ReportGpsService gpsService;
 
     @Override
-    public void doCronJob() {
+    public void doCronJob(ExecutorService executor) {
         List<String> devices =
-//                Arrays.asList(
-//                "14162036970", "868120236768377",
-//                "868120293154065", "868120291579651", "18940712702","18940712702"
-//        );
-                deviceMapper.getDevicesByGpsTime(cronJobDayRange);
+                Arrays.asList(
+                        "12630153059",
+                        "14162036988",
+                        "14162100304",
+                        "15123947277",
+                        "868120250381792"
+                );
+//                deviceMapper.getDevicesByGpsTime(cronJobDayRange);
         if (CollUtil.isEmpty(devices)) {
             return;
         }
@@ -76,12 +73,8 @@ public class ReportTripJobServiceImpl implements ReportTripJobService {
         List<CompletableFuture<Void>> tasks = new ArrayList<>();
         devices.parallelStream()
                 .forEach(device -> tasks.add(
-                        CompletableFuture.runAsync(() -> doSave(device, start, end), getExecutor())));
+                        CompletableFuture.runAsync(() -> doSave(device, start, end), executor)));
         tasks.parallelStream().map(CompletableFuture::join).count();
-    }
-
-    protected Executor getExecutor() {
-        return executor;
     }
 
     /**
