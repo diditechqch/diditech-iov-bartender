@@ -4,9 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.report.ReportApi;
 import com.diditech.iov.gps.api.report.domain.*;
+import com.diditech.iov.gps.api.trace.entity.CoordinateType;
 import com.diditech.iov.gps.app.cmd.service.CmdService;
 import com.diditech.iov.gps.app.core.service.CoreService;
 import com.diditech.iov.gps.app.core.util.Const;
+import com.diditech.iov.gps.app.device.service.DeviceService;
 import com.diditech.iov.gps.app.report.srv.ReportAccService;
 import com.diditech.iov.gps.app.report.srv.ReportGpsService;
 import com.diditech.iov.gps.app.report.srv.ReportStopsService;
@@ -45,6 +47,9 @@ public class ReportProvider implements ReportApi {
 
     @Autowired
     private CmdService cmdService;
+
+    @Autowired
+    private DeviceService deviceService;
 
     @Override
     public ResponseMessage getTripsReport(
@@ -200,6 +205,29 @@ public class ReportProvider implements ReportApi {
         }
         Comparator<ReportCmdData> comparator = (o1, o2) ->
                 o1.getDeviceNum().compareTo(o2.getDeviceNum()) + o1.getCmdTime().compareTo(o2.getCmdTime());
+        if (pageSize != null && pageNo != null) {
+            return ResponseMessage.ok(
+                    coreService.getPaged(list, comparator, pageSize, pageNo));
+        }
+        list.sort(comparator);
+        return ResponseMessage.ok(list);
+    }
+
+    @Override
+    public ResponseMessage getPositionReport(
+            @RequestParam(value = "beginTime", required = false) Date beginTime,
+            @RequestParam(value = "endTime", required = false) Date endTime,
+            @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestBody String devices) {
+        List<ReportPositionData> list =
+                deviceService.getPositionReport(Arrays.asList(devices.split(Const.SEP_COMMA)),
+                        beginTime, endTime, CoordinateType.get(coorType).name());
+        if (CollUtil.isEmpty(list)) {
+            return ResponseMessage.ok();
+        }
+        Comparator<ReportPositionData> comparator = Comparator.comparing(ReportPositionData::getDeviceNum);
         if (pageSize != null && pageNo != null) {
             return ResponseMessage.ok(
                     coreService.getPaged(list, comparator, pageSize, pageNo));

@@ -141,19 +141,40 @@ public interface ReportApi {
 
     /**
      * 指令报表<br>
-     * @param beginTime 指令创建时间 开始时间 yyyy-MM-dd
-     * @param endTime   指令创建时间 结束时间 yyyy-MM-dd
+     * @param beginTime 指令创建时间 开始时间 兼容多种格式
+     * @param endTime   指令创建时间 结束时间 兼容多种格式
      * @param pageSize  非必填，分页查询，每页数据条数，默认不带分页
      * @param pageNo    非必填，分页查询，页数，默认不带分页
      * @param devices   设备号，取自body中文本数据，多个设备使用逗号分隔
      * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值类型为{@link Page Page}&lt;{@link ReportCmdData ReportCmdData}&gt;
-     * @date 2023/3/16
+     * @date 2023/4/18
      * @author zhjd
      */
     @PostMapping("/cmd")
     ResponseMessage getCmdReport(
             @RequestParam(value = "beginTime") Date beginTime,
             @RequestParam(value = "endTime") Date endTime,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestBody String devices);
+
+    /**
+     * 最新定位报表<br>
+     * @param beginTime 定位时间 开始时间 兼容多种格式
+     * @param endTime   定位时间 结束时间 兼容多种格式
+     * @param coorType  非必填，坐标系，默认bd09（百度），其他：gcj02（国测），wgs84（原始）
+     * @param pageSize  非必填，分页查询，每页数据条数，默认不带分页
+     * @param pageNo    非必填，分页查询，页数，默认不带分页
+     * @param devices   设备号，取自body中文本数据，多个设备使用逗号分隔
+     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值类型为{@link Page Page}&lt;{@link ReportPositionData ReportPositionData}&gt;
+     * @date 2023/4/18
+     * @author zhjd
+     */
+    @PostMapping("/position")
+    ResponseMessage getPositionReport(
+            @RequestParam(value = "beginTime") Date beginTime,
+            @RequestParam(value = "endTime") Date endTime,
+            @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(value = "pageNo", required = false) Integer pageNo,
             @RequestBody String devices);

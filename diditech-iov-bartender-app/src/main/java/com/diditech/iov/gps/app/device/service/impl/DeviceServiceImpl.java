@@ -4,7 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import com.diditech.iov.gps.api.device.domain.Device;
 import com.diditech.iov.gps.api.device.domain.DeviceLocation;
 import com.diditech.iov.gps.api.device.domain.DeviceMileage;
+import com.diditech.iov.gps.api.report.domain.ReportPositionData;
 import com.diditech.iov.gps.app.core.service.CoreService;
+import com.diditech.iov.gps.app.core.util.Const;
 import com.diditech.iov.gps.app.device.po.BizDevice;
 import com.diditech.iov.gps.app.device.po.BizDeviceCategory;
 import com.diditech.iov.gps.app.device.po.BizDeviceCategoryExample;
@@ -198,5 +200,24 @@ public class DeviceServiceImpl implements DeviceService {
                     return device;
                 })
                 .forEach(this::addDevice);
+    }
+
+    @Override
+    public List<ReportPositionData> getPositionReport(List<String> deviceNums, Date beginTime, Date endTime, String coorType) {
+        List<ReportPositionData> list = gpsMapper.getPositionReport(deviceNums, beginTime, endTime, coorType);
+        list.forEach(item -> buildStatus(item));
+        return list;
+    }
+
+    private void buildStatus(ReportPositionData item) {
+        String status;
+        if (item.getIsOffline()) {
+            status = "离线";
+        } else {
+            status = item.getIsMoving() ? "行驶" : "停车";
+            status += Const.SPACE;
+            status += item.getIsAccOn() ? "点火" : "熄火";
+        }
+        item.setStatus(status);
     }
 }

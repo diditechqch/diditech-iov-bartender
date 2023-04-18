@@ -3,9 +3,11 @@ package com.diditech.iov.gps.app.device.repository;
 import com.diditech.iov.gps.api.device.domain.ClientConfig;
 import com.diditech.iov.gps.api.device.domain.DeviceLocation;
 import com.diditech.iov.gps.api.device.domain.DeviceMileage;
+import com.diditech.iov.gps.api.report.domain.ReportPositionData;
 import com.diditech.iov.gps.app.device.po.BizDeviceCmd;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -109,4 +111,9 @@ public interface DeviceMapper {
      * @author zhjd
      */
     List<String> getDevicesByGpsTime(int interval);
+
+    List<ReportPositionData> getPositionReport(@Param("deviceNums") List<String> deviceNums,
+                                               @Param("beginTime") Date beginTime,
+                                               @Param("endTime") Date endTime,
+                                               @Param("coorType") String coorType);
 }

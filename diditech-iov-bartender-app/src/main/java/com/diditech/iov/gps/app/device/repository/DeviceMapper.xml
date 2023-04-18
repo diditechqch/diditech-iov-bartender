@@ -87,55 +87,55 @@
         AND category.ISDEL = 0
     </select>
 
-    <insert id="saveDevice" parameterType="com.diditech.iov.gps.api.device.domain.Device">
-        INSERT INTO biz_device
-            (
-            DEVICE_NUM,
-            CATEGORY_ID,
-            WIFI_FLAG,
-            LBS_ENABLE,
-            TIMEOUT_THRESHOLD,
-            ISENABLE,
-            ISDEL,
-            CREATE_TIME,
-            UPDATE_TIME,
-            CLIENT_ID,
-            TENANT_ID
-            )
-        VALUES(
-            #{device.deviceNum},
-            #{device.categoryId},
-            #{device.wifiFlag},
-            #{device.lbsEnable},
-            #{device.timeoutThreshold},
-            #{device.isenable},
-            0,
-            NOW(),
-            NOW(),
-            #{device.clientId},
-            #{device.tenantId}
-            )
-    </insert>
+    <!--    <insert id="saveDevice" parameterType="com.diditech.iov.gps.api.device.domain.Device">-->
+    <!--        INSERT INTO biz_device-->
+    <!--            (-->
+    <!--            DEVICE_NUM,-->
+    <!--            CATEGORY_ID,-->
+    <!--            WIFI_FLAG,-->
+    <!--            LBS_ENABLE,-->
+    <!--            TIMEOUT_THRESHOLD,-->
+    <!--            ISENABLE,-->
+    <!--            ISDEL,-->
+    <!--            CREATE_TIME,-->
+    <!--            UPDATE_TIME,-->
+    <!--            CLIENT_ID,-->
+    <!--            TENANT_ID-->
+    <!--            )-->
+    <!--        VALUES(-->
+    <!--            #{device.deviceNum},-->
+    <!--            #{device.categoryId},-->
+    <!--            #{device.wifiFlag},-->
+    <!--            #{device.lbsEnable},-->
+    <!--            #{device.timeoutThreshold},-->
+    <!--            #{device.isenable},-->
+    <!--            0,-->
+    <!--            NOW(),-->
+    <!--            NOW(),-->
+    <!--            #{device.clientId},-->
+    <!--            #{device.tenantId}-->
+    <!--            )-->
+    <!--    </insert>-->
 
-    <update id="delDevice">
-        UPDATE biz_device
-        SET ISDEL = 1, UPDATE_TIME = NOW()
-        WHERE DEVICE_NUM = #{deviceNum}
-    </update>
+    <!--    <update id="delDevice">-->
+    <!--        UPDATE biz_device-->
+    <!--        SET ISDEL = 1, UPDATE_TIME = NOW()-->
+    <!--        WHERE DEVICE_NUM = #{deviceNum}-->
+    <!--    </update>-->
 
-    <insert id="updateDevice" parameterType="com.diditech.iov.gps.api.device.domain.Device">
-        UPDATE biz_device
-        SET
-            CATEGORY_ID = #{device.categoryId},
-            WIFI_FLAG = #{device.wifiFlag},
-            LBS_ENABLE = #{device.lbsEnable},
-            TIMEOUT_THRESHOLD = #{device.timeoutThreshold},
-            UPDATE_TIME = #{device.updateTime},
-            CLIENT_ID = #{device.clientId},
-            TENANT_ID = #{device.tenantId}
-        WHERE
-            DEVICE_NUM = #{device.deviceNum}
-    </insert>
+    <!--    <insert id="updateDevice" parameterType="com.diditech.iov.gps.api.device.domain.Device">-->
+    <!--        UPDATE biz_device-->
+    <!--        SET-->
+    <!--            CATEGORY_ID = #{device.categoryId},-->
+    <!--            WIFI_FLAG = #{device.wifiFlag},-->
+    <!--            LBS_ENABLE = #{device.lbsEnable},-->
+    <!--            TIMEOUT_THRESHOLD = #{device.timeoutThreshold},-->
+    <!--            UPDATE_TIME = #{device.updateTime},-->
+    <!--            CLIENT_ID = #{device.clientId},-->
+    <!--            TENANT_ID = #{device.tenantId}-->
+    <!--        WHERE-->
+    <!--            DEVICE_NUM = #{device.deviceNum}-->
+    <!--    </insert>-->
 
     <select id="getDeviceConfigData" resultType="com.diditech.iov.gps.api.device.domain.ClientConfig">
         SELECT
@@ -164,5 +164,27 @@
 
     <select id="getDevicesByGpsTime" resultType="java.lang.String">
         SELECT DEVICE_NUM FROM dd_monitor.biz_position WHERE GPS_TIME > date_sub(curdate(), interval ${interval} day);
+    </select>
+
+    <select id="getPositionReport" resultType="com.diditech.iov.gps.api.report.domain.ReportPositionData">
+        SELECT DEVICE_NUM AS deviceNum, CREATE_TIME AS recieveTime, GPS_TIME AS gpsTime, SPEED,
+        <if test="coorType=='BD09'">
+            LNG_BD AS lng, LAT_BD AS lat,
+        </if>
+        <if test="coorType=='GCJ02'">
+            LNG_GC AS lng, LAT_GC AS lat,
+        </if>
+        <if test="coorType=='WGS84'">
+            LNG, LAT,
+        </if>
+        ADDRESS, DIRECTION_NAME AS direction, AV='A' AS isValid, ISMOVING AS isMoving, ALM_ACCON AS isAccOn, ALM_OFFLINE
+        AS isOffline, START_TIME_ACC AS startTimeAcc, START_TIME_MOVING_STOP AS startTimeMoving, START_TIME_ON_OFF_LINE
+        AS startTimeOffline FROM dd_monitor.biz_position WHERE DEVICE_NUM IN
+        <foreach collection="deviceNums" open="(" close=")" item="item" separator=",">
+            #{item}
+        </foreach>
+        <if test="beginTime != null and endTime != null">
+            AND GPS_TIME BETWEEN #{beginTime} AND #{endTime}
+        </if>
     </select>
 </mapper>

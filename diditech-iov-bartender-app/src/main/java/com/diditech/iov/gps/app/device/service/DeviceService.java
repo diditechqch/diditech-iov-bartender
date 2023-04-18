@@ -3,7 +3,11 @@ package com.diditech.iov.gps.app.device.service;
 import com.diditech.iov.gps.api.device.domain.Device;
 import com.diditech.iov.gps.api.device.domain.DeviceLocation;
 import com.diditech.iov.gps.api.device.domain.DeviceMileage;
+import com.diditech.iov.gps.api.report.domain.ReportPositionData;
 import com.diditech.iov.gps.app.device.po.BizDeviceCategory;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author zhjd
@@ -50,7 +54,6 @@ public interface DeviceService {
     /**
      * 设备指令查询
      * @param devices  设备集合（设备编号）
-     * @param clientId
      * @param isEnable 设备启用禁用状态（1：启用 0：禁用）
      * @author zhaist
      * @date 2020/07/02
@@ -105,4 +108,11 @@ public interface DeviceService {
      * @author zhjd
      */
     void addSimpleDevice(String[] deviceNums, BizDeviceCategory deviceCategory, Integer wifiFlag, String clientId);
+
+    /**
+     * 批量查询设备最新定位
+     * @date 2023/4/18
+     * @author zhjd
+     */
+    List<ReportPositionData> getPositionReport(List<String> deviceNums, Date beginTime, Date endTime, String coorType);
 }
