@@ -7,10 +7,11 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.diditech.iov.gps.api.cmd.domain.ClientCmdDTO;
 import com.diditech.iov.gps.api.cmd.domain.ClientCommand;
+import com.diditech.iov.gps.api.cmd.domain.CmdStatus;
 import com.diditech.iov.gps.api.core.BusinessException;
-import com.diditech.iov.gps.api.device.domain.CmdStatus;
 import com.diditech.iov.gps.api.device.domain.DeviceCmd;
 import com.diditech.iov.gps.api.device.domain.DeviceLocation;
+import com.diditech.iov.gps.api.report.domain.ReportCmdData;
 import com.diditech.iov.gps.app.cmd.service.CmdService;
 import com.diditech.iov.gps.app.device.po.BizDeviceCmd;
 import com.diditech.iov.gps.app.device.po.BizDeviceCmdExample;
@@ -131,7 +132,7 @@ public class CmdServiceImpl implements CmdService {
         }
         item.setHost(tagInfo[0]);
         item.setPort(Convert.toInt(tagInfo[1], null));
-        item.setStatus(CmdStatus.SEND);
+        item.setStatus(CmdStatus.SEND.getCode());
     }
 
     @Override
@@ -152,6 +153,25 @@ public class CmdServiceImpl implements CmdService {
         for (int i = 0; i < entityList.size(); i++) {
             cmdList.get(i).setId(entityList.get(i).getId());
         }
+    }
+
+    @Override
+    public List<ReportCmdData> getCmdReport(List<String> deviceNums, Date beginTime, Date endTime) {
+        BizDeviceCmdExample example = new BizDeviceCmdExample();
+        example.createCriteria()
+                .andDeviceNumIn(deviceNums)
+                .andCmdTimeBetween(beginTime, endTime);
+        List<BizDeviceCmd> list = cmdMapper.selectByExample(example);
+        if (CollUtil.isEmpty(list)) {
+            return null;
+        }
+        return list.stream()
+                .map(item -> {
+                    ReportCmdData vo = new ReportCmdData();
+                    BeanUtil.copyProperties(item, vo);
+                    return vo;
+                })
+                .collect(Collectors.toList());
     }
 
     private void awaitForCmdIssued(List<ClientCommand> onlineCcList) {

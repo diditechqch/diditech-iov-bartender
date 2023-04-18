@@ -2,7 +2,9 @@ package com.diditech.iov.gps.app.cmd.service;
 
 import com.diditech.iov.gps.api.cmd.domain.ClientCmdDTO;
 import com.diditech.iov.gps.api.device.domain.DeviceCmd;
+import com.diditech.iov.gps.api.report.domain.ReportCmdData;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,4 +42,10 @@ public interface CmdService {
      */
     void saveCmd(List<ClientCmdDTO> cacheCmdList, String clientId);
 
+    /**
+     * 批量设备指令查询
+     * @date 2023/4/18
+     * @author zhjd
+     */
+    List<ReportCmdData> getCmdReport(List<String> deviceNums, Date beginTime, Date endTime);
 }

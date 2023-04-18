@@ -2,9 +2,7 @@ package com.diditech.iov.gps.api.report;
 
 import com.diditech.iov.gps.api.core.Page;
 import com.diditech.iov.gps.api.core.ResponseMessage;
-import com.diditech.iov.gps.api.report.domain.ReportGpsData;
-import com.diditech.iov.gps.api.report.domain.ReportStopData;
-import com.diditech.iov.gps.api.report.domain.ReportTripsData;
+import com.diditech.iov.gps.api.report.domain.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,7 +55,7 @@ public interface ReportApi {
      * @param pageSize    非必填，分页查询，每页数据条数，默认不带分页
      * @param pageNo      非必填，分页查询，页数，默认不带分页
      * @param devices     设备号，取自body中文本数据，多个设备使用逗号分隔
-     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值类型为{@link Page Page}&lt;{@link ReportTripsData ReportTripsData}&gt;
+     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值类型为{@link Page Page}&lt;{@link ReportAccData ReportAccData}&gt;
      * @date 2023/3/16
      * @author zhjd
      */
@@ -137,6 +135,25 @@ public interface ReportApi {
             @RequestParam(value = "beginTime") Date beginTime,
             @RequestParam(value = "endTime") Date endTime,
             @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestBody String devices);
+
+    /**
+     * 指令报表<br>
+     * @param beginTime 指令创建时间 开始时间 yyyy-MM-dd
+     * @param endTime   指令创建时间 结束时间 yyyy-MM-dd
+     * @param pageSize  非必填，分页查询，每页数据条数，默认不带分页
+     * @param pageNo    非必填，分页查询，页数，默认不带分页
+     * @param devices   设备号，取自body中文本数据，多个设备使用逗号分隔
+     * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值类型为{@link Page Page}&lt;{@link ReportCmdData ReportCmdData}&gt;
+     * @date 2023/3/16
+     * @author zhjd
+     */
+    @PostMapping("/cmd")
+    ResponseMessage getCmdReport(
+            @RequestParam(value = "beginTime") Date beginTime,
+            @RequestParam(value = "endTime") Date endTime,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(value = "pageNo", required = false) Integer pageNo,
             @RequestBody String devices);

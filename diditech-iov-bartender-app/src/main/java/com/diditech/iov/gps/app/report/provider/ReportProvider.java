@@ -3,10 +3,8 @@ package com.diditech.iov.gps.app.report.provider;
 import cn.hutool.core.collection.CollUtil;
 import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.report.ReportApi;
-import com.diditech.iov.gps.api.report.domain.ReportAccData;
-import com.diditech.iov.gps.api.report.domain.ReportGpsData;
-import com.diditech.iov.gps.api.report.domain.ReportStopData;
-import com.diditech.iov.gps.api.report.domain.ReportTripsData;
+import com.diditech.iov.gps.api.report.domain.*;
+import com.diditech.iov.gps.app.cmd.service.CmdService;
 import com.diditech.iov.gps.app.core.service.CoreService;
 import com.diditech.iov.gps.app.core.util.Const;
 import com.diditech.iov.gps.app.report.srv.ReportAccService;
@@ -44,6 +42,9 @@ public class ReportProvider implements ReportApi {
 
     @Autowired
     private CoreService coreService;
+
+    @Autowired
+    private CmdService cmdService;
 
     @Override
     public ResponseMessage getTripsReport(
@@ -178,6 +179,27 @@ public class ReportProvider implements ReportApi {
         }
         Comparator<ReportGpsData> comparator = (o1, o2) ->
                 o1.getDeviceNum().compareTo(o2.getDeviceNum()) + o1.getDayTag().compareTo(o2.getDayTag());
+        if (pageSize != null && pageNo != null) {
+            return ResponseMessage.ok(
+                    coreService.getPaged(list, comparator, pageSize, pageNo));
+        }
+        list.sort(comparator);
+        return ResponseMessage.ok(list);
+    }
+
+    @Override
+    public ResponseMessage getCmdReport(
+            @RequestParam(value = "beginTime") Date beginTime,
+            @RequestParam(value = "endTime") Date endTime,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestBody String devices) {
+        List<ReportCmdData> list = cmdService.getCmdReport(Arrays.asList(devices.split(Const.SEP_COMMA)), beginTime, endTime);
+        if (CollUtil.isEmpty(list)) {
+            return ResponseMessage.ok();
+        }
+        Comparator<ReportCmdData> comparator = (o1, o2) ->
+                o1.getDeviceNum().compareTo(o2.getDeviceNum()) + o1.getCmdTime().compareTo(o2.getCmdTime());
         if (pageSize != null && pageNo != null) {
             return ResponseMessage.ok(
                     coreService.getPaged(list, comparator, pageSize, pageNo));
