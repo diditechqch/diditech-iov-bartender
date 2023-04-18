@@ -1,6 +1,7 @@
 package com.diditech.iov.gps.app.trace.srv;
 
 import com.diditech.iov.gps.api.trace.entity.CoordinateType;
+import com.diditech.iov.gps.api.trace.entity.TripAcc;
 import com.diditech.iov.gps.api.trace.entity.TripGps;
 import com.diditech.iov.gps.app.trace.po.GpsEntity;
 import lombok.Getter;
@@ -100,7 +101,7 @@ public class TraceRequest {
             request.minTripDistance = this.minTripDistance;
             request.includeAddress = this.includeAddress;
             request.order = this.order;
-            return trace.getTripGps(request);
+            return trace.getTrip(request);
         }
 
         public GpsEntity getGps() {
@@ -108,6 +109,19 @@ public class TraceRequest {
             request.deviceNum = this.deviceNum;
             request.beginTime = this.beginTime;
             return trace.getGpsEntity(request);
+        }
+
+        public List<TripAcc> getAcc() {
+            TraceRequest request = new TraceRequest();
+            request.deviceNum = this.deviceNum;
+            request.beginTime = this.beginTime;
+            request.endTime = this.endTime;
+            request.coorType = this.coorType;
+            request.minNoDataDuration = this.minNoDataDuration;
+            request.minTripDistance = this.minTripDistance;
+            request.includeAddress = this.includeAddress;
+            request.order = this.order;
+            return trace.getAcc(request);
         }
     }
 }

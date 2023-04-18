@@ -45,9 +45,9 @@ public class ReportTripsServiceImpl
     private RptMapper rptMapper;
 
     @Override
-    public int saveTrip(List<RptTrips> trips, boolean mergeLastTrip, RptTrips before) {
-        RptTrips mergedTrip = trips.get(0);
-        if (mergeLastTrip && before != null) {
+    public List<RptTrips> setBeforeData(List<RptTrips> list, boolean mergeLastData, RptTrips before) {
+        RptTrips mergedTrip = list.get(0);
+        if (mergeLastData && before != null) {
             log.debug("device num={}, merge data before={}, trip={}",
                     mergedTrip.getDeviceNum(), JSON.toJSONString(before), JSON.toJSONString(mergedTrip));
             before.setEndTime(mergedTrip.getEndTime());
@@ -66,14 +66,19 @@ public class ReportTripsServiceImpl
             before.setDuration(Util.asInt(duration));
             before.setSpeedAve(aveSpeed.shortValue());
             before.setSpeedMax(NumberUtil.max(before.getSpeedMax(), mergedTrip.getSpeedMax()));
-            trips.remove(0);
+            list.remove(0);
             // 不需要移除该条数据，不影响停车数据，且里程计算需要使用
-            trips.add(before);
+            list.add(before);
         }
-        trips.sort(Comparator.comparing(RptTrips::getStartTime));
+        list.sort(Comparator.comparing(RptTrips::getStartTime));
+        return list;
+    }
+
+    @Override
+    public int saveReportData(List<RptTrips> trips) {
         RptTripsExample example = new RptTripsExample();
         example.createCriteria()
-                .andDeviceNumEqualTo(mergedTrip.getDeviceNum())
+                .andDeviceNumEqualTo(trips.get(0).getDeviceNum())
                 .andStartTimeBetween(trips.get(0).getStartTime(), trips.get(trips.size() - 1).getStartTime());
         tripMapper.deleteByExample(example);
         return rptMapper.batchInsertTrips(trips);
@@ -128,13 +133,13 @@ public class ReportTripsServiceImpl
     }
 
     @Override
-    public Map<String, List<ReportTripsData>> loadDynamicTrip(List<String> deviceNumList,
-                                                              Date beginTime,
-                                                              Date endTime,
-                                                              String coorType,
-                                                              Integer minDuration,
-                                                              Double minDistance,
-                                                              Map<String, List<ReportTripsData>> historyMap) {
+    public Map<String, List<ReportTripsData>> loadDynamicReport(List<String> deviceNumList,
+                                                                Date beginTime,
+                                                                Date endTime,
+                                                                String coorType,
+                                                                Integer minDuration,
+                                                                Double minDistance,
+                                                                Map<String, List<ReportTripsData>> historyMap) {
         return deviceNumList.parallelStream()
                 .map(deviceNum -> loadDynamicTripByDevice(deviceNum,
                         beginTime, endTime, coorType, historyMap.get(deviceNum)))
@@ -160,7 +165,7 @@ public class ReportTripsServiceImpl
     }
 
     @Override
-    protected ReportTripsData buildReportDto(RptTrips rptTrip, String coorType) {
+    public ReportTripsData buildReportDto(RptTrips rptTrip, String coorType) {
         ReportTripsData data = new ReportTripsData();
         BeanUtil.copyProperties(rptTrip, data);
         if (StrUtil.equalsIgnoreCase(CoordinateType.BD09.name(), coorType)) {
@@ -184,7 +189,8 @@ public class ReportTripsServiceImpl
      * @date 2023/3/23
      * @author zhjd
      */
-    private RptTrips buildRptTripByDynamicTrip(TripGps entity) {
+    @Override
+    public RptTrips buildRptTripByDynamicTrip(TripGps entity) {
         RptTrips rpt = new RptTrips();
         BeanUtil.copyProperties(entity, rpt);
         rpt.setDayTag(DateUtil.format(entity.getStartTime(), Util.STR_DATE_FORMAT));
@@ -251,7 +257,8 @@ public class ReportTripsServiceImpl
      * @date 2023/3/24
      * @author zhjd
      */
-    private boolean mergeReportDto(ReportTripsData before, ReportTripsData after) {
+    @Override
+    public boolean mergeReportDto(ReportTripsData before, ReportTripsData after) {
         boolean needMergeBefore = DateUtil.between(before.getEndTime(),
                 after.getStartTime(), DateUnit.SECOND) <= minNoDataDuration;
         if (needMergeBefore) {

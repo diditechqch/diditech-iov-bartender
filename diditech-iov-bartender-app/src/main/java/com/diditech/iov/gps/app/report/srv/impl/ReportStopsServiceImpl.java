@@ -60,23 +60,32 @@ public class ReportStopsServiceImpl
                 .andDeviceNumEqualTo(trips.get(0).getDeviceNum())
                 .andStartTimeBetween(trips.get(0).getStartTime(), trips.get(trips.size() - 1).getStartTime());
         stopsMapper.deleteByExample(example);
-        int result = rptMapper.batchInsertStops(stops);
         if (!mergeLastTrip && before != null) {
             // 恢复原数据，否则会影响里程统计
             trips.remove(before);
         }
-        return result;
+        return saveReportData(stops);
     }
 
     @Override
-    protected Map<String, List<ReportStopData>> loadDynamicTrip(List<String> deviceNumList,
-                                                                Date beginTime,
-                                                                Date endTime,
-                                                                String coorType,
-                                                                Integer minDuration,
-                                                                Double minDistance,
-                                                                Map<String, List<ReportStopData>> historyMap) {
-        return loadDynamicTrip(endTime, coorType, minDuration, historyMap);
+    public List<RptStops> setBeforeData(List<RptStops> list, boolean mergeLastData, RptStops before) {
+        return null;
+    }
+
+    @Override
+    public int saveReportData(List<RptStops> list) {
+        return rptMapper.batchInsertStops(list);
+    }
+
+    @Override
+    protected Map<String, List<ReportStopData>> loadDynamicReport(List<String> deviceNumList,
+                                                                  Date beginTime,
+                                                                  Date endTime,
+                                                                  String coorType,
+                                                                  Integer minDuration,
+                                                                  Double minDistance,
+                                                                  Map<String, List<ReportStopData>> historyMap) {
+        return loadDynamicReport(endTime, coorType, minDuration, historyMap);
     }
 
     @Override
@@ -88,10 +97,10 @@ public class ReportStopsServiceImpl
         return selectEntity(deviceNumList, fromTime, toTime, minDuration);
     }
 
-    private Map<String, List<ReportStopData>> loadDynamicTrip(Date endTime,
-                                                              String coorType,
-                                                              Integer minDuration,
-                                                              Map<String, List<ReportStopData>> historyMap) {
+    private Map<String, List<ReportStopData>> loadDynamicReport(Date endTime,
+                                                                String coorType,
+                                                                Integer minDuration,
+                                                                Map<String, List<ReportStopData>> historyMap) {
         // 查询最新分段动态数据
         Map<String, List<ReportTripsData>> tripMap
                 = historyMap.keySet().stream()

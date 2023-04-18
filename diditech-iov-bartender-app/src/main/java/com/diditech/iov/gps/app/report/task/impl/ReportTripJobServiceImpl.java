@@ -1,4 +1,4 @@
-package com.diditech.iov.gps.app.report.srv.impl;
+package com.diditech.iov.gps.app.report.task.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
@@ -8,9 +8,10 @@ import com.diditech.iov.gps.app.device.repository.DeviceMapper;
 import com.diditech.iov.gps.app.report.po.RptTrips;
 import com.diditech.iov.gps.app.report.repository.RptMapper;
 import com.diditech.iov.gps.app.report.srv.ReportGpsService;
-import com.diditech.iov.gps.app.report.srv.ReportJobService;
 import com.diditech.iov.gps.app.report.srv.ReportStopsService;
 import com.diditech.iov.gps.app.report.srv.ReportTripsService;
+import com.diditech.iov.gps.app.report.srv.impl.ReportTripServiceBase;
+import com.diditech.iov.gps.app.report.task.ReportTripJobService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class ReportJobServiceImpl implements ReportJobService {
+public class ReportTripJobServiceImpl implements ReportTripJobService {
 
     private final int cronJobDayRange = 2;
 
@@ -74,8 +76,12 @@ public class ReportJobServiceImpl implements ReportJobService {
         List<CompletableFuture<Void>> tasks = new ArrayList<>();
         devices.parallelStream()
                 .forEach(device -> tasks.add(
-                        CompletableFuture.runAsync(() -> doSave(device, start, end), executor)));
+                        CompletableFuture.runAsync(() -> doSave(device, start, end), getExecutor())));
         tasks.parallelStream().map(CompletableFuture::join).count();
+    }
+
+    protected Executor getExecutor() {
+        return executor;
     }
 
     /**
@@ -105,7 +111,7 @@ public class ReportJobServiceImpl implements ReportJobService {
                         trips.get(0).getStartTime(), DateUnit.SECOND) <= ReportTripServiceBase.minNoDataDuration;
             }
 
-            tripsService.saveTrip(trips, mergeLastTrip, lastTrip);
+            tripsService.saveReport(trips, mergeLastTrip, lastTrip);
             stopsService.saveStops(trips, mergeLastTrip, lastTrip);
             gpsService.saveDayGps(trips, mergeLastTrip);
         } catch (Exception ex) {

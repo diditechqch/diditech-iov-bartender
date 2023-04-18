@@ -41,8 +41,8 @@ public class Quartz {
         return scheduler;
     }
 
-//    @Profile("dev")
-//    @Bean
+    @Profile("dev")
+    @Bean
     public Scheduler configScheduler_() {
         Scheduler scheduler = schedulerFactory.getScheduler();
 

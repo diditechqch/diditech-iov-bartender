@@ -1,6 +1,7 @@
 package com.diditech.iov.gps.app.report.srv;
 
 import com.diditech.iov.gps.api.report.domain.ReportTripsData;
+import com.diditech.iov.gps.api.trace.entity.TripGps;
 import com.diditech.iov.gps.app.report.po.RptTrips;
 
 import java.util.Date;
@@ -19,7 +20,9 @@ public interface ReportTripsService {
      * @date 2023/3/24
      * @author zhjd
      */
-    int saveTrip(List<RptTrips> trips, boolean mergeLastTrip, RptTrips before);
+    int saveReport(List<RptTrips> trips, boolean mergeLastTrip, RptTrips before);
+
+    List<RptTrips> setBeforeData(List<RptTrips> list, boolean mergeLastData, RptTrips before);
 
     List<ReportTripsData> getReport(List<String> deviceNumList,
                                     Date beginTime,
@@ -49,4 +52,10 @@ public interface ReportTripsService {
                                                   List<ReportTripsData> historyList);
 
     RptTrips rebuildRptTripByTime(RptTrips rptTrip);
+
+    RptTrips buildRptTripByDynamicTrip(TripGps entity);
+
+    boolean mergeReportDto(ReportTripsData before, ReportTripsData after);
+
+    ReportTripsData buildReportDto(RptTrips trips, String coorType);
 }

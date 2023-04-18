@@ -1,7 +1,7 @@
-package com.diditech.iov.gps.app.trace.srv;
+package com.diditech.iov.gps.app.trip.srv;
 
-import com.diditech.iov.gps.app.trace.srv.impl.TripAccServiceImpl;
-import com.diditech.iov.gps.app.trace.srv.impl.TripGpsServiceImpl;
+import com.diditech.iov.gps.app.trip.srv.impl.AccServiceImpl;
+import com.diditech.iov.gps.app.trip.srv.impl.TripServiceImpl;
 
 /**
  * 分段服务
@@ -10,8 +10,8 @@ import com.diditech.iov.gps.app.trace.srv.impl.TripGpsServiceImpl;
  */
 public enum TripType {
 
-    GPS(TripGpsServiceImpl.getInstance()),
-    ACC(TripAccServiceImpl.getInstance()),
+    GPS(TripServiceImpl.getInstance()),
+    ACC(AccServiceImpl.getInstance()),
     ;
 
     private TripService tripService;

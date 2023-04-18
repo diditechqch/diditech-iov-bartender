@@ -75,7 +75,7 @@ public class TraceProvider implements TraceApi {
     }
 
     @Override
-    public ResponseMessage getTraceTripAcc(
+    public ResponseMessage getAcc(
             @RequestParam(value = "deviceNum") String deviceNum,
             @RequestParam(value = "beginTime") Date beginTime,
             @RequestParam(value = "endTime") Date endTime,

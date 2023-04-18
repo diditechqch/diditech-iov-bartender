@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diditech.iov.gps.app.report.repository.RptAccMapper">
+    <resultMap id="BaseResultMap" type="com.diditech.iov.gps.app.report.po.RptAcc">
+        <id column="DEVICE_NUM" jdbcType="VARCHAR" property="deviceNum"/>
+        <id column="START_TIME" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="DAY_TAG" jdbcType="VARCHAR" property="dayTag"/>
+        <result column="END_TIME" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="DISTANCE" jdbcType="DECIMAL" property="distance"/>
+        <result column="DURATION" jdbcType="INTEGER" property="duration"/>
+        <result column="SPEED_MAX" jdbcType="SMALLINT" property="speedMax"/>
+        <result column="SPEED_AVE" jdbcType="SMALLINT" property="speedAve"/>
+        <result column="FUEL_CONSUMPTION" jdbcType="INTEGER" property="fuelConsumption"/>
+        <result column="START_LNG_BD" jdbcType="DECIMAL" property="startLngBd"/>
+        <result column="START_LAT_BD" jdbcType="DECIMAL" property="startLatBd"/>
+        <result column="END_LNG_BD" jdbcType="DECIMAL" property="endLngBd"/>
+        <result column="END_LAT_BD" jdbcType="DECIMAL" property="endLatBd"/>
+        <result column="START_LNG_GC" jdbcType="DECIMAL" property="startLngGc"/>
+        <result column="START_LAT_GC" jdbcType="DECIMAL" property="startLatGc"/>
+        <result column="END_LNG_GC" jdbcType="DECIMAL" property="endLngGc"/>
+        <result column="END_LAT_GC" jdbcType="DECIMAL" property="endLatGc"/>
+        <result column="START_LNG" jdbcType="DECIMAL" property="startLng"/>
+        <result column="START_LAT" jdbcType="DECIMAL" property="startLat"/>
+        <result column="END_LNG" jdbcType="DECIMAL" property="endLng"/>
+        <result column="END_LAT" jdbcType="DECIMAL" property="endLat"/>
+        <result column="START_ADDRESS" jdbcType="VARCHAR" property="startAddress"/>
+        <result column="END_ADDRESS" jdbcType="VARCHAR" property="endAddress"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    DEVICE_NUM, START_TIME, DAY_TAG, END_TIME, DISTANCE, DURATION, SPEED_MAX, SPEED_AVE, 
+    FUEL_CONSUMPTION, START_LNG_BD, START_LAT_BD, END_LNG_BD, END_LAT_BD, START_LNG_GC, 
+    START_LAT_GC, END_LNG_GC, END_LAT_GC, START_LNG, START_LAT, END_LNG, END_LAT, START_ADDRESS, 
+    END_ADDRESS
+  </sql>
+    <select id="selectByExample" parameterType="com.diditech.iov.gps.app.report.po.RptAccExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from rpt_acc
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="com.diditech.iov.gps.app.report.po.RptAccKey"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rpt_acc where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR} and START_TIME = #{startTime,jdbcType=TIMESTAMP}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.diditech.iov.gps.app.report.po.RptAccKey">
+    delete from rpt_acc
+    where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR}
+      and START_TIME = #{startTime,jdbcType=TIMESTAMP}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.diditech.iov.gps.app.report.po.RptAccExample">
+        delete from rpt_acc
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.diditech.iov.gps.app.report.po.RptAcc">
+    insert into rpt_acc (DEVICE_NUM, START_TIME, DAY_TAG, 
+      END_TIME, DISTANCE, DURATION, 
+      SPEED_MAX, SPEED_AVE, FUEL_CONSUMPTION, 
+      START_LNG_BD, START_LAT_BD, END_LNG_BD, 
+      END_LAT_BD, START_LNG_GC, START_LAT_GC, 
+      END_LNG_GC, END_LAT_GC, START_LNG, 
+      START_LAT, END_LNG, END_LAT, 
+      START_ADDRESS, END_ADDRESS)
+    values (#{deviceNum,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{dayTag,jdbcType=VARCHAR}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{distance,jdbcType=DECIMAL}, #{duration,jdbcType=INTEGER}, 
+      #{speedMax,jdbcType=SMALLINT}, #{speedAve,jdbcType=SMALLINT}, #{fuelConsumption,jdbcType=INTEGER}, 
+      #{startLngBd,jdbcType=DECIMAL}, #{startLatBd,jdbcType=DECIMAL}, #{endLngBd,jdbcType=DECIMAL}, 
+      #{endLatBd,jdbcType=DECIMAL}, #{startLngGc,jdbcType=DECIMAL}, #{startLatGc,jdbcType=DECIMAL}, 
+      #{endLngGc,jdbcType=DECIMAL}, #{endLatGc,jdbcType=DECIMAL}, #{startLng,jdbcType=DECIMAL}, 
+      #{startLat,jdbcType=DECIMAL}, #{endLng,jdbcType=DECIMAL}, #{endLat,jdbcType=DECIMAL}, 
+      #{startAddress,jdbcType=VARCHAR}, #{endAddress,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.diditech.iov.gps.app.report.po.RptAcc">
+        insert into rpt_acc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceNum != null">
+                DEVICE_NUM,
+            </if>
+            <if test="startTime != null">
+                START_TIME,
+            </if>
+            <if test="dayTag != null">
+                DAY_TAG,
+            </if>
+            <if test="endTime != null">
+                END_TIME,
+            </if>
+            <if test="distance != null">
+                DISTANCE,
+            </if>
+            <if test="duration != null">
+                DURATION,
+            </if>
+            <if test="speedMax != null">
+                SPEED_MAX,
+            </if>
+            <if test="speedAve != null">
+                SPEED_AVE,
+            </if>
+            <if test="fuelConsumption != null">
+                FUEL_CONSUMPTION,
+            </if>
+            <if test="startLngBd != null">
+                START_LNG_BD,
+            </if>
+            <if test="startLatBd != null">
+                START_LAT_BD,
+            </if>
+            <if test="endLngBd != null">
+                END_LNG_BD,
+            </if>
+            <if test="endLatBd != null">
+                END_LAT_BD,
+            </if>
+            <if test="startLngGc != null">
+                START_LNG_GC,
+            </if>
+            <if test="startLatGc != null">
+                START_LAT_GC,
+            </if>
+            <if test="endLngGc != null">
+                END_LNG_GC,
+            </if>
+            <if test="endLatGc != null">
+                END_LAT_GC,
+            </if>
+            <if test="startLng != null">
+                START_LNG,
+            </if>
+            <if test="startLat != null">
+                START_LAT,
+            </if>
+            <if test="endLng != null">
+                END_LNG,
+            </if>
+            <if test="endLat != null">
+                END_LAT,
+            </if>
+            <if test="startAddress != null">
+                START_ADDRESS,
+            </if>
+            <if test="endAddress != null">
+                END_ADDRESS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceNum != null">
+                #{deviceNum,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dayTag != null">
+                #{dayTag,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="distance != null">
+                #{distance,jdbcType=DECIMAL},
+            </if>
+            <if test="duration != null">
+                #{duration,jdbcType=INTEGER},
+            </if>
+            <if test="speedMax != null">
+                #{speedMax,jdbcType=SMALLINT},
+            </if>
+            <if test="speedAve != null">
+                #{speedAve,jdbcType=SMALLINT},
+            </if>
+            <if test="fuelConsumption != null">
+                #{fuelConsumption,jdbcType=INTEGER},
+            </if>
+            <if test="startLngBd != null">
+                #{startLngBd,jdbcType=DECIMAL},
+            </if>
+            <if test="startLatBd != null">
+                #{startLatBd,jdbcType=DECIMAL},
+            </if>
+            <if test="endLngBd != null">
+                #{endLngBd,jdbcType=DECIMAL},
+            </if>
+            <if test="endLatBd != null">
+                #{endLatBd,jdbcType=DECIMAL},
+            </if>
+            <if test="startLngGc != null">
+                #{startLngGc,jdbcType=DECIMAL},
+            </if>
+            <if test="startLatGc != null">
+                #{startLatGc,jdbcType=DECIMAL},
+            </if>
+            <if test="endLngGc != null">
+                #{endLngGc,jdbcType=DECIMAL},
+            </if>
+            <if test="endLatGc != null">
+                #{endLatGc,jdbcType=DECIMAL},
+            </if>
+            <if test="startLng != null">
+                #{startLng,jdbcType=DECIMAL},
+            </if>
+            <if test="startLat != null">
+                #{startLat,jdbcType=DECIMAL},
+            </if>
+            <if test="endLng != null">
+                #{endLng,jdbcType=DECIMAL},
+            </if>
+            <if test="endLat != null">
+                #{endLat,jdbcType=DECIMAL},
+            </if>
+            <if test="startAddress != null">
+                #{startAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="endAddress != null">
+                #{endAddress,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.diditech.iov.gps.app.report.po.RptAccExample"
+            resultType="java.lang.Long">
+        select count(*) from rpt_acc
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update rpt_acc
+        <set>
+            <if test="record.deviceNum != null">
+                DEVICE_NUM = #{record.deviceNum,jdbcType=VARCHAR},
+            </if>
+            <if test="record.startTime != null">
+                START_TIME = #{record.startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.dayTag != null">
+                DAY_TAG = #{record.dayTag,jdbcType=VARCHAR},
+            </if>
+            <if test="record.endTime != null">
+                END_TIME = #{record.endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.distance != null">
+                DISTANCE = #{record.distance,jdbcType=DECIMAL},
+            </if>
+            <if test="record.duration != null">
+                DURATION = #{record.duration,jdbcType=INTEGER},
+            </if>
+            <if test="record.speedMax != null">
+                SPEED_MAX = #{record.speedMax,jdbcType=SMALLINT},
+            </if>
+            <if test="record.speedAve != null">
+                SPEED_AVE = #{record.speedAve,jdbcType=SMALLINT},
+            </if>
+            <if test="record.fuelConsumption != null">
+                FUEL_CONSUMPTION = #{record.fuelConsumption,jdbcType=INTEGER},
+            </if>
+            <if test="record.startLngBd != null">
+                START_LNG_BD = #{record.startLngBd,jdbcType=DECIMAL},
+            </if>
+            <if test="record.startLatBd != null">
+                START_LAT_BD = #{record.startLatBd,jdbcType=DECIMAL},
+            </if>
+            <if test="record.endLngBd != null">
+                END_LNG_BD = #{record.endLngBd,jdbcType=DECIMAL},
+            </if>
+            <if test="record.endLatBd != null">
+                END_LAT_BD = #{record.endLatBd,jdbcType=DECIMAL},
+            </if>
+            <if test="record.startLngGc != null">
+                START_LNG_GC = #{record.startLngGc,jdbcType=DECIMAL},
+            </if>
+            <if test="record.startLatGc != null">
+                START_LAT_GC = #{record.startLatGc,jdbcType=DECIMAL},
+            </if>
+            <if test="record.endLngGc != null">
+                END_LNG_GC = #{record.endLngGc,jdbcType=DECIMAL},
+            </if>
+            <if test="record.endLatGc != null">
+                END_LAT_GC = #{record.endLatGc,jdbcType=DECIMAL},
+            </if>
+            <if test="record.startLng != null">
+                START_LNG = #{record.startLng,jdbcType=DECIMAL},
+            </if>
+            <if test="record.startLat != null">
+                START_LAT = #{record.startLat,jdbcType=DECIMAL},
+            </if>
+            <if test="record.endLng != null">
+                END_LNG = #{record.endLng,jdbcType=DECIMAL},
+            </if>
+            <if test="record.endLat != null">
+                END_LAT = #{record.endLat,jdbcType=DECIMAL},
+            </if>
+            <if test="record.startAddress != null">
+                START_ADDRESS = #{record.startAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="record.endAddress != null">
+                END_ADDRESS = #{record.endAddress,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update rpt_acc set DEVICE_NUM = #{record.deviceNum,jdbcType=VARCHAR}, START_TIME =
+        #{record.startTime,jdbcType=TIMESTAMP}, DAY_TAG = #{record.dayTag,jdbcType=VARCHAR}, END_TIME =
+        #{record.endTime,jdbcType=TIMESTAMP}, DISTANCE = #{record.distance,jdbcType=DECIMAL}, DURATION =
+        #{record.duration,jdbcType=INTEGER}, SPEED_MAX = #{record.speedMax,jdbcType=SMALLINT}, SPEED_AVE =
+        #{record.speedAve,jdbcType=SMALLINT}, FUEL_CONSUMPTION = #{record.fuelConsumption,jdbcType=INTEGER},
+        START_LNG_BD = #{record.startLngBd,jdbcType=DECIMAL}, START_LAT_BD = #{record.startLatBd,jdbcType=DECIMAL},
+        END_LNG_BD = #{record.endLngBd,jdbcType=DECIMAL}, END_LAT_BD = #{record.endLatBd,jdbcType=DECIMAL}, START_LNG_GC
+        = #{record.startLngGc,jdbcType=DECIMAL}, START_LAT_GC = #{record.startLatGc,jdbcType=DECIMAL}, END_LNG_GC =
+        #{record.endLngGc,jdbcType=DECIMAL}, END_LAT_GC = #{record.endLatGc,jdbcType=DECIMAL}, START_LNG =
+        #{record.startLng,jdbcType=DECIMAL}, START_LAT = #{record.startLat,jdbcType=DECIMAL}, END_LNG =
+        #{record.endLng,jdbcType=DECIMAL}, END_LAT = #{record.endLat,jdbcType=DECIMAL}, START_ADDRESS =
+        #{record.startAddress,jdbcType=VARCHAR}, END_ADDRESS = #{record.endAddress,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.diditech.iov.gps.app.report.po.RptAcc">
+        update rpt_acc
+        <set>
+            <if test="dayTag != null">
+                DAY_TAG = #{dayTag,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime != null">
+                END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="distance != null">
+                DISTANCE = #{distance,jdbcType=DECIMAL},
+            </if>
+            <if test="duration != null">
+                DURATION = #{duration,jdbcType=INTEGER},
+            </if>
+            <if test="speedMax != null">
+                SPEED_MAX = #{speedMax,jdbcType=SMALLINT},
+            </if>
+            <if test="speedAve != null">
+                SPEED_AVE = #{speedAve,jdbcType=SMALLINT},
+            </if>
+            <if test="fuelConsumption != null">
+                FUEL_CONSUMPTION = #{fuelConsumption,jdbcType=INTEGER},
+            </if>
+            <if test="startLngBd != null">
+                START_LNG_BD = #{startLngBd,jdbcType=DECIMAL},
+            </if>
+            <if test="startLatBd != null">
+                START_LAT_BD = #{startLatBd,jdbcType=DECIMAL},
+            </if>
+            <if test="endLngBd != null">
+                END_LNG_BD = #{endLngBd,jdbcType=DECIMAL},
+            </if>
+            <if test="endLatBd != null">
+                END_LAT_BD = #{endLatBd,jdbcType=DECIMAL},
+            </if>
+            <if test="startLngGc != null">
+                START_LNG_GC = #{startLngGc,jdbcType=DECIMAL},
+            </if>
+            <if test="startLatGc != null">
+                START_LAT_GC = #{startLatGc,jdbcType=DECIMAL},
+            </if>
+            <if test="endLngGc != null">
+                END_LNG_GC = #{endLngGc,jdbcType=DECIMAL},
+            </if>
+            <if test="endLatGc != null">
+                END_LAT_GC = #{endLatGc,jdbcType=DECIMAL},
+            </if>
+            <if test="startLng != null">
+                START_LNG = #{startLng,jdbcType=DECIMAL},
+            </if>
+            <if test="startLat != null">
+                START_LAT = #{startLat,jdbcType=DECIMAL},
+            </if>
+            <if test="endLng != null">
+                END_LNG = #{endLng,jdbcType=DECIMAL},
+            </if>
+            <if test="endLat != null">
+                END_LAT = #{endLat,jdbcType=DECIMAL},
+            </if>
+            <if test="startAddress != null">
+                START_ADDRESS = #{startAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="endAddress != null">
+                END_ADDRESS = #{endAddress,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR} and START_TIME = #{startTime,jdbcType=TIMESTAMP}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.diditech.iov.gps.app.report.po.RptAcc">
+    update rpt_acc
+    set DAY_TAG = #{dayTag,jdbcType=VARCHAR},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      DISTANCE = #{distance,jdbcType=DECIMAL},
+      DURATION = #{duration,jdbcType=INTEGER},
+      SPEED_MAX = #{speedMax,jdbcType=SMALLINT},
+      SPEED_AVE = #{speedAve,jdbcType=SMALLINT},
+      FUEL_CONSUMPTION = #{fuelConsumption,jdbcType=INTEGER},
+      START_LNG_BD = #{startLngBd,jdbcType=DECIMAL},
+      START_LAT_BD = #{startLatBd,jdbcType=DECIMAL},
+      END_LNG_BD = #{endLngBd,jdbcType=DECIMAL},
+      END_LAT_BD = #{endLatBd,jdbcType=DECIMAL},
+      START_LNG_GC = #{startLngGc,jdbcType=DECIMAL},
+      START_LAT_GC = #{startLatGc,jdbcType=DECIMAL},
+      END_LNG_GC = #{endLngGc,jdbcType=DECIMAL},
+      END_LAT_GC = #{endLatGc,jdbcType=DECIMAL},
+      START_LNG = #{startLng,jdbcType=DECIMAL},
+      START_LAT = #{startLat,jdbcType=DECIMAL},
+      END_LNG = #{endLng,jdbcType=DECIMAL},
+      END_LAT = #{endLat,jdbcType=DECIMAL},
+      START_ADDRESS = #{startAddress,jdbcType=VARCHAR},
+      END_ADDRESS = #{endAddress,jdbcType=VARCHAR}
+    where DEVICE_NUM = #{deviceNum,jdbcType=VARCHAR}
+      and START_TIME = #{startTime,jdbcType=TIMESTAMP}
+  </update>
+    <select id="selectByExampleWithRowbounds" parameterType="com.diditech.iov.gps.app.report.po.RptAccExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from rpt_acc
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+</mapper>

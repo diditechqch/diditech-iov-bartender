@@ -1,9 +1,9 @@
-package com.diditech.iov.gps.app.trace.srv.impl;
+package com.diditech.iov.gps.app.trip.srv.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.diditech.iov.gps.api.trace.entity.GpsInfoTripMin;
 import com.diditech.iov.gps.api.trace.entity.TripAcc;
-import com.diditech.iov.gps.app.trace.srv.TripServiceBase;
+import com.diditech.iov.gps.app.trip.srv.TripServiceBase;
 import dd.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class TripAccServiceImpl extends TripServiceBase<TripAcc> {
+public class AccServiceImpl extends TripServiceBase<TripAcc> {
 
     private static class Holder {
-        private static final TripAccServiceImpl INSTANCE = new TripAccServiceImpl();
+        private static final AccServiceImpl INSTANCE = new AccServiceImpl();
     }
 
-    public static TripAccServiceImpl getInstance() {
+    public static AccServiceImpl getInstance() {
         return Holder.INSTANCE;
     }
 

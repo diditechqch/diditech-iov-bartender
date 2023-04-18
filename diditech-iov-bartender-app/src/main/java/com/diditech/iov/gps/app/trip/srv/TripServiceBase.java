@@ -1,4 +1,4 @@
-package com.diditech.iov.gps.app.trace.srv;
+package com.diditech.iov.gps.app.trip.srv;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
@@ -9,6 +9,7 @@ import com.diditech.iov.gps.api.trace.entity.TripBase;
 import com.diditech.iov.gps.app.core.util.Const;
 import com.diditech.iov.gps.app.geo.address.service.GeoServiceI;
 import com.diditech.iov.gps.app.obd.service.ObdService;
+import com.diditech.iov.gps.app.trace.srv.TraceService;
 import com.diditech.utils.GPSUtil;
 import dd.utils.Util;
 import lombok.SneakyThrows;

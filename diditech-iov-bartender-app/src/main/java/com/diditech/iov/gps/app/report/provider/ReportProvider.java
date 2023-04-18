@@ -3,11 +3,13 @@ package com.diditech.iov.gps.app.report.provider;
 import cn.hutool.core.collection.CollUtil;
 import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.report.ReportApi;
+import com.diditech.iov.gps.api.report.domain.ReportAccData;
 import com.diditech.iov.gps.api.report.domain.ReportGpsData;
 import com.diditech.iov.gps.api.report.domain.ReportStopData;
 import com.diditech.iov.gps.api.report.domain.ReportTripsData;
 import com.diditech.iov.gps.app.core.service.CoreService;
 import com.diditech.iov.gps.app.core.util.Const;
+import com.diditech.iov.gps.app.report.srv.ReportAccService;
 import com.diditech.iov.gps.app.report.srv.ReportGpsService;
 import com.diditech.iov.gps.app.report.srv.ReportStopsService;
 import com.diditech.iov.gps.app.report.srv.ReportTripsService;
@@ -30,6 +32,9 @@ public class ReportProvider implements ReportApi {
 
     @Autowired
     private ReportTripsService tripsService;
+
+    @Autowired
+    private ReportAccService accService;
 
     @Autowired
     private ReportStopsService stopsService;
@@ -70,6 +75,38 @@ public class ReportProvider implements ReportApi {
         }
         tripList.sort(comparator);
         return ResponseMessage.ok(tripList);
+    }
+
+    @Override
+    public ResponseMessage getAccReport(
+            @RequestParam(value = "beginTime") Date beginTime,
+            @RequestParam(value = "endTime") Date endTime,
+            @RequestParam(value = "coorType", required = false, defaultValue = "bd09") String coorType,
+            @RequestParam(value = "minDuration", required = false, defaultValue = "1") Integer minDuration,
+            @RequestParam(value = "minDistance", required = false, defaultValue = "0.2") Double minDistance,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestBody String devices) {
+        minDuration = minDuration < 1 ? 1 : minDuration;
+        minDistance = minDistance < 0.2 ? 0.2 : minDistance;
+
+        List<String> deviceNumList = Arrays.asList(devices.split(Const.SEP_COMMA));
+        List<ReportAccData> accList
+                = accService.getReport(deviceNumList, beginTime, endTime,
+                coorType, minDuration, minDistance);
+
+        if (CollUtil.isEmpty(accList)) {
+            return ResponseMessage.ok();
+        }
+
+        Comparator<ReportAccData> comparator = (o1, o2) ->
+                o1.getDeviceNum().compareTo(o2.getDeviceNum()) + o1.getStartTime().compareTo(o2.getStartTime());
+        if (pageSize != null && pageNo != null) {
+            return ResponseMessage.ok(
+                    coreService.getPaged(accList, comparator, pageSize, pageNo));
+        }
+        accList.sort(comparator);
+        return ResponseMessage.ok(accList);
     }
 
     @Override

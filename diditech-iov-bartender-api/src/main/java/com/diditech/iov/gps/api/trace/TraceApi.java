@@ -84,8 +84,8 @@ public interface TraceApi {
      * @date 2023/4/10
      * @author zhjd
      */
-    @GetMapping("/trip/acc")
-    ResponseMessage getTraceTripAcc(
+    @GetMapping("/acc")
+    ResponseMessage getAcc(
             @RequestParam(value = "deviceNum") String deviceNum,
             @RequestParam(value = "beginTime") Date beginTime,
             @RequestParam(value = "endTime") Date endTime,

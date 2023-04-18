@@ -1,10 +1,7 @@
 package com.diditech.iov.gps.app.trace.srv;
 
 import com.diditech.iov.gps.api.core.ResponseMessage;
-import com.diditech.iov.gps.api.trace.entity.GpsAreaQuery;
-import com.diditech.iov.gps.api.trace.entity.GpsInfoTripMin;
-import com.diditech.iov.gps.api.trace.entity.TraceInfo;
-import com.diditech.iov.gps.api.trace.entity.TripGps;
+import com.diditech.iov.gps.api.trace.entity.*;
 import com.diditech.iov.gps.app.trace.po.GpsEntity;
 
 import java.util.Date;
@@ -55,7 +52,9 @@ public interface TraceService {
      * @date 2023/3/17
      * @author zhjd
      */
-    List<TripGps> getTripGps(TraceRequest request);
+    List<TripGps> getTrip(TraceRequest request);
+
+    List<TripAcc> getAcc(TraceRequest request);
 
     /**
      * 根据轨迹获取首次进/出区域的定位时间
@@ -88,4 +87,5 @@ public interface TraceService {
     GpsEntity getGpsEntity(TraceRequest request);
 
     List<GpsInfoTripMin> getTraceTripMin(String deviceNum, Date beginTime, Date endTime, String coorType);
+
 }

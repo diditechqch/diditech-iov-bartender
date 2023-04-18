@@ -1,4 +1,4 @@
-package com.diditech.iov.gps.app.trace.srv;
+package com.diditech.iov.gps.app.trip.srv;
 
 import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.trace.entity.TripBase;

@@ -113,3 +113,6 @@ quartz:
   trip:
     cron: "0 0 1am * * ?"
     batch-thread-num: 5
+  acc:
+    cron: "0 30 1am * * ?"
+    batch-thread-num: 5

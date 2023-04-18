@@ -1,4 +1,4 @@
-package com.diditech.iov.gps.app.trace.srv.impl;
+package com.diditech.iov.gps.app.trip.srv.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -7,7 +7,11 @@ import com.diditech.iov.gps.api.trace.entity.*;
 import com.diditech.iov.gps.app.core.util.GisUtils;
 import com.diditech.iov.gps.app.trace.po.GpsAreaCalculationInfo;
 import com.diditech.iov.gps.app.trace.po.GpsEntity;
-import com.diditech.iov.gps.app.trace.srv.*;
+import com.diditech.iov.gps.app.trace.srv.TraceDbService;
+import com.diditech.iov.gps.app.trace.srv.TraceRequest;
+import com.diditech.iov.gps.app.trace.srv.TraceService;
+import com.diditech.iov.gps.app.trip.srv.TripService;
+import com.diditech.iov.gps.app.trip.srv.TripType;
 import com.diditech.utils.GPSUtil;
 import dd.utils.Util;
 import lombok.extern.slf4j.Slf4j;
@@ -65,8 +69,22 @@ public class TraceServiceImpl implements TraceService {
     }
 
     @Override
-    public List<TripGps> getTripGps(TraceRequest request) {
+    public List<TripGps> getTrip(TraceRequest request) {
         return TripType.GPS.getService()
+                .getTrip(
+                        request.getDeviceNum(),
+                        request.getBeginTime(),
+                        request.getEndTime(),
+                        request.getCoorType(),
+                        request.getMinNoDataDuration(),
+                        request.getMinTripDistance(),
+                        request.getIncludeAddress(),
+                        request.getOrder());
+    }
+
+    @Override
+    public List<TripAcc> getAcc(TraceRequest request) {
+        return TripType.ACC.getService()
                 .getTrip(
                         request.getDeviceNum(),
                         request.getBeginTime(),

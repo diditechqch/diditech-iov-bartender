@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public abstract class ReportTripServiceBase<T extends ReportTripsDataBase, V extends RptTripsKey> {
 
-    static final int minNoDataDuration = 900;
+    public static final int minNoDataDuration = 900;
 
     /**
      * 获取统计数据
@@ -42,7 +42,7 @@ public abstract class ReportTripServiceBase<T extends ReportTripsDataBase, V ext
         boolean mixedUp = beginTime.before(beginOfToday) && beginOfToday.before(endTime);
         if (mixedUp) {
             Map<String, List<T>> dynamicMap
-                    = loadDynamicTrip(deviceNumList,
+                    = loadDynamicReport(deviceNumList,
                     beginOfToday,
                     endTime,
                     coorType,
@@ -57,18 +57,30 @@ public abstract class ReportTripServiceBase<T extends ReportTripsDataBase, V ext
                 .collect(Collectors.toList());
     }
 
+    public int saveReport(List<V> list, boolean mergeLastData, V before) {
+        List<V> reportData = setBeforeData(list, mergeLastData, before);
+        if (CollUtil.isEmpty(reportData)) {
+            return 0;
+        }
+        return saveReportData(reportData);
+    }
+
+    public abstract List<V> setBeforeData(List<V> list, boolean mergeLastData, V before);
+
+    public abstract int saveReportData(List<V> list);
+
     /**
      * 根据轨迹动态数据生成结果
      * @date 2023/3/21
      * @author zhjd
      */
-    protected abstract Map<String, List<T>> loadDynamicTrip(List<String> deviceNumList,
-                                                            Date beginTime,
-                                                            Date endTime,
-                                                            String coorType,
-                                                            Integer minDuration,
-                                                            Double minDistance,
-                                                            Map<String, List<T>> resultMap);
+    protected abstract Map<String, List<T>> loadDynamicReport(List<String> deviceNumList,
+                                                              Date beginTime,
+                                                              Date endTime,
+                                                              String coorType,
+                                                              Integer minDuration,
+                                                              Double minDistance,
+                                                              Map<String, List<T>> historyMap);
 
     /**
      * 获取数据库数据
@@ -76,7 +88,7 @@ public abstract class ReportTripServiceBase<T extends ReportTripsDataBase, V ext
      * @author zhjd
      */
     protected abstract List<V> selectEntity(List<String> deviceNumList,
-                                            Date beginTime,
+                                            Date fromTime,
                                             Date toTime,
                                             Integer minDuration,
                                             Double minDistance);
