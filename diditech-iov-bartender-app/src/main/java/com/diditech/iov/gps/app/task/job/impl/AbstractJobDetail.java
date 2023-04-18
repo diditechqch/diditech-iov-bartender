@@ -1,5 +1,6 @@
-package com.diditech.iov.gps.app.report.task;
+package com.diditech.iov.gps.app.task.job.impl;
 
+import com.diditech.iov.gps.app.task.job.JobDetailI;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;

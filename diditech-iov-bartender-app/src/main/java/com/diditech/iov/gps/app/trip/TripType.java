@@ -1,5 +1,6 @@
-package com.diditech.iov.gps.app.trip.srv;
+package com.diditech.iov.gps.app.trip;
 
+import com.diditech.iov.gps.app.trip.srv.TripService;
 import com.diditech.iov.gps.app.trip.srv.impl.AccServiceImpl;
 import com.diditech.iov.gps.app.trip.srv.impl.TripServiceImpl;
 

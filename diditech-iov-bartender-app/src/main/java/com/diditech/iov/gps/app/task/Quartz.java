@@ -1,5 +1,6 @@
-package com.diditech.iov.gps.app.report.task;
+package com.diditech.iov.gps.app.task;
 
+import com.diditech.iov.gps.app.task.job.JobDetailI;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
-package com.diditech.iov.gps.app.report.task.impl;
+package com.diditech.iov.gps.app.task.job.impl;
 
-import com.diditech.iov.gps.app.report.task.AbstractJobDetail;
-import com.diditech.iov.gps.app.report.task.ReportTripJobService;
+import com.diditech.iov.gps.app.task.srv.ReportTripJobService;
 import lombok.Data;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

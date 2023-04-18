@@ -1,4 +1,4 @@
-package com.diditech.iov.gps.app.report.task.impl;
+package com.diditech.iov.gps.app.task.srv.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
@@ -8,7 +8,7 @@ import com.diditech.iov.gps.app.report.po.RptAcc;
 import com.diditech.iov.gps.app.report.repository.RptMapper;
 import com.diditech.iov.gps.app.report.srv.ReportAccService;
 import com.diditech.iov.gps.app.report.srv.impl.ReportTripServiceBase;
-import com.diditech.iov.gps.app.report.task.ReportAccJobService;
+import com.diditech.iov.gps.app.task.srv.ReportAccJobService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
