@@ -65,12 +65,12 @@ public class DeviceFilterConfig {
     @Bean("transcodeDevices")
     public List<String> getTranscodeDevices() {
         return Arrays.asList(
-                new String[]{HQDevice.DEVICE_TYPE_HQ, JT808Device.DEVICE_TYPE_JT808,
-                        MG50Device.DEVICE_TYPE_JT808, BK200Device.DEVICE_TYPE_BK200,
-                        LG30Device.DEVICE_TYPE_LG30, OcarDevice.DEVICE_TYPE_OCAR,
-                        GH01Device.DEVICE_TYPE_GH01, A9Device.DEVICE_TYPE_A9,
-                        JT1078Device.DEVICE_TYPE_JT1078, M230Device.DEVICE_TYPE_M230,
-                        HZDevice.DEVICE_TYPE_HZ, Kks808Device.DEVICE_TYPE_KKS808, QYGDevice.DEVICE_TYPE_QYG});
+                HQDevice.DEVICE_TYPE_HQ, JT808Device.DEVICE_TYPE_JT808,
+                MG50Device.DEVICE_TYPE_JT808, BK200Device.DEVICE_TYPE_BK200,
+                LG30Device.DEVICE_TYPE_LG30, OcarDevice.DEVICE_TYPE_OCAR,
+                GH01Device.DEVICE_TYPE_GH01, A9Device.DEVICE_TYPE_A9,
+                JT1078Device.DEVICE_TYPE_JT1078, M230Device.DEVICE_TYPE_M230,
+                HZDevice.DEVICE_TYPE_HZ, Kks808Device.DEVICE_TYPE_KKS808, QYGDevice.DEVICE_TYPE_QYG);
     }
 
     @Bean("transcodeRule")

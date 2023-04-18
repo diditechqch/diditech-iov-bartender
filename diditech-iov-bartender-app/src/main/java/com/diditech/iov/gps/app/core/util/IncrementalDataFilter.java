@@ -136,8 +136,8 @@ class IncrementalData {
         Integer[] integers = Arrays.stream(array).boxed().toArray(Integer[]::new);
         data.median = median(integers);
         //计算差值
-        for (int i = 0; i < srcData.size(); i++) {
-            data.diffData.add(srcData.get(i) - data.median);
+        for (Integer srcDatum : srcData) {
+            data.diffData.add(srcDatum - data.median);
         }
 
         return data;
@@ -152,9 +152,9 @@ class IncrementalData {
         Arrays.sort(numArray);
         Integer median;
         if (numArray.length % 2 == 0)
-            median = ((Integer)numArray[numArray.length/2] + (Integer)numArray[numArray.length/2 - 1])/2;
+            median = (numArray[numArray.length / 2] + numArray[numArray.length / 2 - 1]) / 2;
         else
-            median = (Integer) numArray[numArray.length/2];
+            median = numArray[numArray.length / 2];
         return median;
     }
 

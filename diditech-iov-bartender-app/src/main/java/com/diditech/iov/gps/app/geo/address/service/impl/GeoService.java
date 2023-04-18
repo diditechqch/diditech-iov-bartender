@@ -75,7 +75,7 @@ public class GeoService implements GeoServiceI {
                         .collect(Collectors.toList()));
 
         List<String> addressList = Arrays.stream(coorArray)
-                .map(item -> result.get(item))
+                .map(result::get)
                 .collect(Collectors.toList());
 
         return String.join(Const.SEP_COMMA, addressList);

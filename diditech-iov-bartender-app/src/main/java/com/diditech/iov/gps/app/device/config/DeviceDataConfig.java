@@ -68,7 +68,6 @@ public class DeviceDataConfig {
     @Bean("redundantKeys")
     public Set<String> getRedundantKeys() {
         Set<String> redundantKeys = new HashSet<>(40);
-        redundantKeys.add(KEY.MEDIA_STATUS);
         redundantKeys.add(KEY.MESSAGE);
         redundantKeys.add(KEY.REPLY_DATA);
         redundantKeys.add(KEY.REPORT_TYPE);
@@ -80,9 +79,6 @@ public class DeviceDataConfig {
         redundantKeys.add(KEY.EW);
         redundantKeys.add(KEY.NS);
         redundantKeys.add(KEY.MEDIA_STATUS);
-        redundantKeys.add(KEY.LAC);
-        redundantKeys.add(KEY.CELL_ID);
-        redundantKeys.add(KEY.CELL_DBM);
         redundantKeys.add(KEY.LAC);
         redundantKeys.add(KEY.CELL_ID);
         redundantKeys.add(KEY.CELL_DBM);

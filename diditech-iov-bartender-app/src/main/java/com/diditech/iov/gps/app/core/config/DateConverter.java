@@ -1,7 +1,6 @@
 package com.diditech.iov.gps.app.core.config;
 
 import cn.hutool.core.date.DateUtil;
-import dd.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 
