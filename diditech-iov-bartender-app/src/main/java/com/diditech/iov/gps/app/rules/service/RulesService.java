@@ -1,13 +1,13 @@
 package com.diditech.iov.gps.app.rules.service;
 
 
-import java.util.List;
-import java.util.Set;
-
-import com.diditech.iov.gps.api.rules.domain.EventRuleDTO;
 import com.diditech.common.domain.EventRuleThreshold;
+import com.diditech.iov.gps.api.rules.domain.EventRuleDTO;
 import com.diditech.iov.gps.app.rules.po.EventRule;
 import com.diditech.iov.gps.app.rules.po.EventRuleDevice;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 规则服务
@@ -34,11 +34,24 @@ public interface RulesService {
      */
     void saveRule(String[] devices, EventRuleDTO rules);
 
+    /**
+     * 批量保存规则
+     * PS: 仅针对班车业务，有做单独处理，同时存储进出区域规则
+     */
+    void batchSaveRule(String[] devices, List<EventRuleDTO> rules, boolean clearOld);
+
     void updateRule(String[] devices, EventRuleDTO rules);
 
     EventRule getRuleById(Integer ruleId);
 
     List<EventRuleDevice> getRuleDevice(String[] devices);
+
+    /**
+     * for banche
+     * @author hefan
+     * @date 2022/8/29 0029 15:54
+     */
+    List<EventRuleDevice> getRuleDevice(List<String> devices, String threshold1, String areaId);
 
     int deleteRule(String[] devices, List<Integer> ruleIdList);
 

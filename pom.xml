@@ -12,7 +12,7 @@
         <module>diditech-iov-bartender-app</module>
         <module>diditech-iov-bartender-auth</module>
         <module>diditech-iov-bartender-gateway</module>
-        <module>diditech-iov-bartender-test-api</module>
+        <module>demo</module>
         <module>diditech-iov-gps-bean</module>
         <module>monica-common</module>
     </modules>
@@ -35,13 +35,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.18</version>
+            <version>1.18.24</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.2.0</version>
+            <version>5.8.10</version>
         </dependency>
     </dependencies>
 

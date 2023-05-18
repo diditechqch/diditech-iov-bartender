@@ -55,7 +55,7 @@
             SELECT
             GPS_TIME AS gpsTime,
             CREATE_TIME AS createTime,
-            ${coordinate}
+            ${coordinate} LNG AS primaryLng, LAT AS primaryLat,
             ORI_MILEAGE AS oriMileage,
             ACC,
             CASE

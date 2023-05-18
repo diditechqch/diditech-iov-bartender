@@ -58,4 +58,14 @@ public class DeviceMessage implements Serializable {
     // 设备历史报文对象
     private Map<String, Object> lastDeviceData;
 
+    private String threshold1;
+
+    private String threshold2;
+
+    private String threshold3;
+
+    private String threshold4;
+
+    private String threshold5;
+
 }

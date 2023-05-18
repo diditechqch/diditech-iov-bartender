@@ -31,4 +31,8 @@ public interface EventRuleDeviceMapper {
     int updateByPrimaryKeySelective(EventRuleDevice record);
 
     int updateByPrimaryKey(EventRuleDevice record);
+
+    List<EventRuleDevice> selectByFilter(@Param("deviceNums") List<String> deviceNums,
+                                         @Param("threshold1") String threshold1,
+                                         @Param("areaId") String areaId);
 }

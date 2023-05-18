@@ -26,6 +26,7 @@ public interface StopPointApi {
      * @param minStaySeconds  最小时长，秒，默认600秒
      * @return 返回对象 {@link ResponseMessage ResponseMessage.getData()}值为 {@link StopPointInfo StopPointInfo}
      */
+    @Deprecated
     @GetMapping
     ResponseMessage getStopPointList(@RequestParam(value = "deviceNum") String deviceNum,
                                      @RequestParam(value = "startTime") Date startTime,

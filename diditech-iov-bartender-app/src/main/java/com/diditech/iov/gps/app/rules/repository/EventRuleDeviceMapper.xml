@@ -222,4 +222,24 @@
       order by ${orderByClause}
     </if>
   </select>
+
+    <select id="selectByFilter" resultType="com.diditech.iov.gps.app.rules.po.EventRuleDevice">
+        SELECT rd.id, rd.DEVICE_NUM deviceNum, rd.RULE_ID ruleId, rd.CREATE_TIME createTime, rd.CLIENT_ID clientId,
+        r.THRESHOLD1 threshold1, ra.id areaId FROM event_rule_device rd INNER JOIN event_rule r ON r.id = rd.RULE_ID
+        INNER JOIN event_rule_area ra ON r.id = ra.RULE_ID
+        <where>
+            <if test="deviceNums != null and deviceNums.size() > 0">
+                rd.device_num IN
+                <foreach collection="deviceNums" open="(" close=")" separator="," item="el">
+                    #{el}
+                </foreach>
+            </if>
+            <if test="threshold1 != null and threshold1 != ''">
+                AND r.THRESHOLD1 = #{threshold1}
+            </if>
+            <if test="areaId != null and areaId != ''">
+                AND ra.ID = #{areaId}
+            </if>
+        </where>
+    </select>
 </mapper>

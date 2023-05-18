@@ -44,7 +44,7 @@ public class TraceRequest {
         private Date endTime;
         private String coorType = CoordinateType.BD09.name();
         private int minNoDataDuration = 900;
-        private double minTripDistance = 0.2;
+        private double minTripDistance = 0.01;
         private int includeAddress = 1;
         private int order = 0;
 

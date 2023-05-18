@@ -10,16 +10,12 @@ import com.diditech.iov.gps.app.core.util.Const;
 import com.diditech.iov.gps.app.geo.address.service.GeoServiceI;
 import com.diditech.iov.gps.app.obd.service.ObdService;
 import com.diditech.iov.gps.app.trace.srv.TraceService;
-import com.diditech.utils.GPSUtil;
-import dd.utils.Util;
+import com.diditech.utils.Util;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -58,41 +54,30 @@ public abstract class TripServiceBase<T extends TripBase> implements TripService
                            Double minTripDistance,
                            Integer includeAddress,
                            Integer order) {
-        List<GpsInfoTripMin> traceList = traceService.getTraceTripMin(deviceNum, beginTime, endTime, coorType);
+
+        List<GpsInfoTripMin> traceList =
+                traceService.getTraceTripMin(deviceNum, beginTime, endTime, coorType);
         if (CollUtil.isEmpty(traceList)) {
             return new ArrayList<>();
         }
 
         List<T> trip = getTripInfo(deviceNum, traceList, minNoDataDuration, minTripDistance);
 
-        if (Util.asInt(includeAddress) == 1) {
-            String coorBatch = trip.stream()
-                    .map(t -> t.getStartLat() + StrUtil.COMMA + t.getStartLng() + Const.SEP_LINE
-                            + t.getEndLat() + StrUtil.COMMA + t.getEndLng() + Const.SEP_LINE)
-                    .reduce(Const.EMPTY, String::concat);
-
-            List<String> address = geoService.geoBatchReturnList(coorBatch, coorType);
-            if (address != null && address.size() == trip.size() * 2) {
-                int addrIdx = 0;
-                for (T t : trip) {
-                    t.setStartAddress(address.get(addrIdx).split(Const.REGEX_LINE)[0]);
-                    t.setEndAddress(address.get(addrIdx + 1).split(Const.REGEX_LINE)[0]);
-                    addrIdx = addrIdx + 2;
-                }
-            }
+        if (Util.asInt(order) == 1) {
+            trip.sort(Comparator.comparing(TripBase::getStartTime));
         }
 
         getObdFuelMulti(trip, deviceNum);
 
-        if (Util.asInt(order) == 1) {
-            return trip.stream()
-                    .sorted(((o1, o2) -> o2.getStartTime().compareTo(o1.getStartTime())))
-                    .collect(Collectors.toList());
+        if (Util.asInt(includeAddress) == 1) {
+            fillInAddress(trip, coorType);
+
         }
         return trip;
     }
 
-    protected abstract List<T> getTripInfo(String deviceNum, List<GpsInfoTripMin> traceList,
+    protected abstract List<T> getTripInfo(String deviceNum,
+                                           List<GpsInfoTripMin> traceList,
                                            Integer minNoDataDuration,
                                            Double minTripDistance);
 
@@ -111,19 +96,6 @@ public abstract class TripServiceBase<T extends TripBase> implements TripService
                 .max()
                 .getAsInt();
 
-        double tripDistance = 0D;
-        Double lat1;
-        Double lng1;
-        Double lat2;
-        Double lng2;
-        for (int i = 1; i < oneTrip.size(); i++) {
-            lat1 = oneTrip.get(i - 1).getLat();
-            lng1 = oneTrip.get(i - 1).getLng();
-            lat2 = oneTrip.get(i).getLat();
-            lng2 = oneTrip.get(i).getLng();
-            tripDistance += GPSUtil.getDistance(lat1, lng1, lat2, lng2);
-        }
-
         GpsInfoTripMin startPoint = oneTrip.get(0);
         GpsInfoTripMin endPoint = oneTrip.get(oneTrip.size() - 1);
 
@@ -140,8 +112,7 @@ public abstract class TripServiceBase<T extends TripBase> implements TripService
         trip.setEndLng(endPoint.getLng());
         trip.setEndTime(end);
         trip.setMaxSpeed(BigDecimal.valueOf(maxSpeed));
-        trip.setMileage(
-                BigDecimal.valueOf(tripDistance).setScale(1, BigDecimal.ROUND_HALF_UP));
+        trip.setMileage(traceService.getTripDistance(oneTrip));
         if (trip.getMileage() != null && duration > 0L) {
             BigDecimal aveSpeed = trip.getMileage()
                     .divide(BigDecimal.valueOf(duration / 60D), 1, BigDecimal.ROUND_HALF_UP);
@@ -173,6 +144,23 @@ public abstract class TripServiceBase<T extends TripBase> implements TripService
                 trips.get(i).setFuelConsumption(fuelValues.get(i));
             }
             // modify by zhjd 20220512 end
+        }
+    }
+
+    protected void fillInAddress(List<T> trip, String coorType) {
+        String coorBatch = trip.stream()
+                .map(t -> t.getStartLat() + StrUtil.COMMA + t.getStartLng() + Const.SEP_LINE
+                        + t.getEndLat() + StrUtil.COMMA + t.getEndLng() + Const.SEP_LINE)
+                .reduce(Const.EMPTY, String::concat);
+
+        List<String> address = geoService.geoBatchReturnList(coorBatch, coorType);
+        if (address != null && address.size() == trip.size() * 2) {
+            int addrIdx = 0;
+            for (T t : trip) {
+                t.setStartAddress(address.get(addrIdx).split(Const.REGEX_LINE)[0]);
+                t.setEndAddress(address.get(addrIdx + 1).split(Const.REGEX_LINE)[0]);
+                addrIdx = addrIdx + 2;
+            }
         }
     }
 }

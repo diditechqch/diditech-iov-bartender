@@ -1,19 +1,12 @@
 package com.diditech.iov.gps.api.rules;
 
-import javax.validation.Valid;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.diditech.common.domain.EventRuleThreshold;
 import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.rules.domain.EventRuleDTO;
 import com.diditech.iov.gps.api.rules.domain.EventType;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequestMapping("/rules")
 public interface RulesApi {
@@ -26,7 +19,21 @@ public interface RulesApi {
      * @author zhjd
      */
     @PostMapping
-    ResponseMessage saveRule(@RequestParam(value = "devices") String[] devices, @Valid @RequestBody EventRuleDTO rules);
+    ResponseMessage saveRule(@RequestParam(value = "devices") String[] devices,
+                             @Valid @RequestBody EventRuleDTO rules);
+
+    /**
+     * 批量新建规则 适配班车线路保存，每个站点维护进出记录
+     * @param devices  设备集合
+     * @param rules    事件规则集合 {@link EventRuleDTO}
+     * @param clearOld 是否清除旧数据(根据第一个ruleDto中的threshold1作为线路ID清除)
+     * @author hefan
+     * @date 2022/7/21 0021 16:09
+     */
+    @PostMapping("batch")
+    ResponseMessage batchSaveRule(@RequestParam(value = "devices") String[] devices,
+                                  @Valid @RequestBody EventRuleDTO[] rules,
+                                  @RequestParam(value = "clearOld", required = false, defaultValue = "0") boolean clearOld);
 
     /**
      * 新建终端级规则，配置后影响全终端应用范围设备
@@ -49,12 +56,16 @@ public interface RulesApi {
 
     /**
      * 删除设备关联所有规则
-     * @param devices 设备集合
+     * @param devices    设备集合
+     * @param threshold1 使用threshold1作为条件过滤数据，班车中该条件为线路ID
+     * @param areaId     使用areaId作为条件过滤数据，班车中该条件为线路站点ID
      * @date 2020/7/7
      * @author zhjd
      */
     @DeleteMapping(path = "/devices")
-    ResponseMessage deleteRuleByDevices(@RequestParam(value = "devices") String[] devices);
+    ResponseMessage deleteRuleByDevices(@RequestParam(value = "devices") String[] devices,
+                                        @RequestParam(value = "threshold1", required = false) String threshold1,
+                                        @RequestParam(value = "areaId", required = false) String areaId);
 
     /**
      * 批量删除规则

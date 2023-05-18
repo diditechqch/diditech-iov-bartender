@@ -74,6 +74,9 @@ public abstract class AbstractTraceDbService implements TraceDbService {
             if (StringUtils.isEmpty(item.getLocMode())) {
                 item.fillLocMode();
             }
+            if (StringUtils.isEmpty(item.getSpeedType())) {
+                item.fillSpeedData();
+            }
         });
 
         return traceList;

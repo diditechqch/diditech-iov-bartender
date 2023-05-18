@@ -2,11 +2,11 @@ package com.diditech.iov.gps.api.trace.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @author zhjd <br>
@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 @ToString
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode
 public class GpsInfoTripMin implements Serializable {
     /**
      * 序列号
@@ -37,23 +38,20 @@ public class GpsInfoTripMin implements Serializable {
      */
     private Double lat;
     /**
-     * 累计总里程（系统计算），单位km，3位小数
-     */
-    private BigDecimal totalMileage;
-    /**
      * 速度，单位km/h，无小数，优先使用OBD速度
      */
     private Integer speed;
-    /**
-     * OBD速度，单位km/h，无小数
-     */
-    @JSONField(serialize = false)
-    private Integer obdSpeed;
 
     /**
-     * 原始里程，单位km，3位小数
+     * 原始坐标，用于计算距离，解决坐标系不一致距离计算误差
      */
-    private BigDecimal oriMileage;
+    @JSONField(serialize = false)
+    private Double primaryLng;
+    /**
+     * 原始坐标，用于计算距离，解决坐标系不一致距离计算误差
+     */
+    @JSONField(serialize = false)
+    private Double primaryLat;
 
     /**
      * 点火熄火状态，1点火0熄火 20230412

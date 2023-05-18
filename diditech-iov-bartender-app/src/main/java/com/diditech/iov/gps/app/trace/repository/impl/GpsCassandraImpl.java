@@ -16,7 +16,6 @@ import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,6 +68,8 @@ public class GpsCassandraImpl implements GpsDao {
             " %s " +
             " OBD_SPEED AS obdSpeed,\n" +
             " SPEED AS speed,\n" +
+            " LNG AS primaryLng,\n" +
+            " LAT AS primaryLat,\n" +
             " TOTAL_MILEAGE AS totalMileage,\n" +
             " ACC \n" + // add by zhjd 查询增加点火字段
             " FROM %s \n" +
@@ -170,12 +171,7 @@ public class GpsCassandraImpl implements GpsDao {
                 condition.getGpsTable(), condition.getDeviceNum(),
                 condition.getBeginTime(), condition.getEndTime());
         return cassandraTemplate.stream(cql, GpsInfoTripMin.class)
-                .filter(item -> !ObjectUtils.isEmpty(item.getLng()) && !ObjectUtils.isEmpty(item.getLat())
-                        && !ObjectUtils.isEmpty(item.getTotalMileage()))
-                .peek(detail -> {
-                    detail.setSpeed(ObjectUtils.isEmpty(detail.getObdSpeed()) ? detail.getSpeed() : detail.getObdSpeed());
-                    detail.setTotalMileage(detail.getTotalMileage().setScale(3, BigDecimal.ROUND_HALF_UP));
-                })
+                .filter(item -> !ObjectUtils.isEmpty(item.getLng()) && !ObjectUtils.isEmpty(item.getLat()))
                 .collect(Collectors.toList());
     }
 

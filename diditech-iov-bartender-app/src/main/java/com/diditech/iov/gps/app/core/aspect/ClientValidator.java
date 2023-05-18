@@ -49,7 +49,7 @@ public class ClientValidator {
      */
     @SneakyThrows
     @Before("controller()")
-    public void logBefore(JoinPoint joinPoint) {
+    public void doValidation(JoinPoint joinPoint) {
         HttpServletRequest req = RequestHelper.getRequest();
         if (req == null || req.getRequestURI().contains("/opt")) {
             return;

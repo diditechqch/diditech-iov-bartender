@@ -31,6 +31,24 @@ import java.util.stream.Collectors;
 @Service
 public class RulesServiceImpl implements RulesService {
 
+    /**
+     * 进区域规则类型
+     */
+    private static final int inRuleType = 11;
+
+    /**
+     * 出区域规则类型
+     */
+    private static final int outRuleType = 21;
+
+    /**
+     * 班车站点规则类型，进出绑定同时创建
+     */
+    private static final List<Integer> bcRuleTypeList = new ArrayList<Integer>(2) {{
+        add(inRuleType);
+        add(outRuleType);
+    }};
+
     @Value("${gps.redis.prefix.rule}")
     private String redis_key_pre_rule;
 
@@ -95,6 +113,29 @@ public class RulesServiceImpl implements RulesService {
 
         // 4. 缓存规则、区域数据
         saveCacheRules(rules, area, new HashSet<>(Arrays.asList(devices)));
+    }
+
+    @Override
+    @Transactional(transactionManager = "defaultSqlTransactionManager")
+    public void batchSaveRule(String[] devices, List<EventRuleDTO> rules, boolean clearOld) {
+        String routeId = rules.get(0).getThreshold1();
+        if (clearOld && StrUtil.isNotBlank(routeId)) {
+            List<EventRuleDevice> ruleDevices = getRuleDevice(devices);
+            if (!CollUtil.isEmpty(ruleDevices)) {
+                List<Integer> ruleIdList = ruleDevices.stream()
+                        .map(EventRuleDevice::getRuleId).distinct().collect(Collectors.toList());
+                int result = deleteRule(devices, ruleIdList);
+                if (result == 0) {
+                    log.info("线路{}原站点数据清除成功", routeId);
+                }
+            }
+        }
+        for (EventRuleDTO rule : rules) {
+            for (Integer ruleType : bcRuleTypeList) {
+                rule.setRuleType(ruleType);
+                saveRule(devices, rule);
+            }
+        }
     }
 
     @Override
@@ -164,6 +205,11 @@ public class RulesServiceImpl implements RulesService {
         return ruleDeviceMapper.selectByExample(ruleDeviceExample);
     }
 
+    @Override
+    public List<EventRuleDevice> getRuleDevice(List<String> devices, String threshold1, String areaId) {
+        return ruleDeviceMapper.selectByFilter(devices, threshold1, areaId);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     @Transactional
@@ -172,19 +218,28 @@ public class RulesServiceImpl implements RulesService {
 
         // 删除规则设备关系
         EventRuleDeviceExample ruleDeviceExample = new EventRuleDeviceExample();
-        ruleDeviceExample.createCriteria().andDeviceNumIn(Arrays.asList(devices));
+        ruleDeviceExample.createCriteria()
+                .andDeviceNumIn(Arrays.asList(devices))
+                .andRuleIdIn(ruleIdList);
         int deleteRuleDevice = ruleDeviceMapper.deleteByExample(ruleDeviceExample);
         if (deleteRuleDevice < 1) {
-            log.error("删除规则设备关系失败：devices={}", devices);
+            log.error("删除规则设备关系失败：devices={}, ruleIdList:{}", devices, ruleIdList);
             error = 1;
         }
+        final Object[] ruleIdArr = ruleIdList.toArray();
         Arrays.stream(devices).forEach(deviceNum -> {
             // 删除所有规则关联设备
-            coreRedisTemplate.delete(redis_key_pre_rule_device.concat(deviceNum));
+            coreRedisTemplate.opsForSet().remove(redis_key_pre_rule_device.concat(deviceNum), ruleIdArr);
+            // coreRedisTemplate.delete(redis_key_pre_rule_device.concat(deviceNum));
             // 删除设备历史事件状态缓存
             Set<String> keys = coreRedisTemplate.keys(redis_key_pre_event_rule.concat("*").concat(deviceNum));
-            if (CollUtil.isEmpty(keys)) {
-                coreRedisTemplate.delete(keys);
+            if (!CollUtil.isEmpty(keys)) {
+                for (String key : keys) {
+                    String[] keyParams = key.split("-");
+                    if (keyParams.length == 4 && ruleIdList.contains(Integer.valueOf(keyParams[2]))) {
+                        coreRedisTemplate.delete(keys);
+                    }
+                }
             }
         });
 

@@ -4,6 +4,7 @@ import com.diditech.iov.gps.api.core.ResponseMessage;
 import com.diditech.iov.gps.api.trace.entity.*;
 import com.diditech.iov.gps.app.trace.po.GpsEntity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -38,14 +39,14 @@ public interface TraceService {
      * @date 2021/3/2
      * @author zhjd
      */
-    List<TripGps> getTrip(String deviceNum,
-                          Date beginTime,
-                          Date endTime,
-                          String coorType,
-                          Integer minNoDataDuration,
-                          Double minTripDistance,
-                          Integer includeAddress,
-                          Integer order);
+    List getTrip(String deviceNum,
+                 Date beginTime,
+                 Date endTime,
+                 String coorType,
+                 Integer minNoDataDuration,
+                 Double minTripDistance,
+                 Integer includeAddress,
+                 Integer order);
 
     /**
      * 使用TraceTripRequest.Builder灵活构建查询条件
@@ -65,12 +66,14 @@ public interface TraceService {
      */
     Map<String, Date> calculateGpsAreaInfo(GpsAreaQuery[] queries);
 
+    BigDecimal getTripDistance(List<GpsInfoTripMin> oneTrip);
+
     /**
      * 计算轨迹里程
      * @date 2023/3/16
      * @author zhjd
      */
-    double getTraceDistance(String deviceNum, Date beginTime, Date endTime);
+    BigDecimal getTraceDistance(String deviceNum, Date beginTime, Date endTime);
 
     /**
      * 查询轨迹

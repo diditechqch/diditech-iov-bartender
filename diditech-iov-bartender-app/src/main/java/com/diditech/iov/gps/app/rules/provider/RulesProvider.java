@@ -58,6 +58,23 @@ public class RulesProvider implements RulesApi {
     }
 
     @Override
+    public ResponseMessage batchSaveRule(String[] devices, EventRuleDTO[] rules, boolean clearOld) {
+        for (EventRuleDTO rule : rules) {
+            rule.setClientId(RequestHelper.getClientId());
+            ResponseMessage r = ruleValidation(devices, rule);
+            if (r != null) {
+                return r;
+            }
+        }
+        try {
+            rulesService.batchSaveRule(devices, Arrays.asList(rules), clearOld);
+        } catch (Exception exception) {
+            return ResponseMessage.error(exception.getMessage());
+        }
+        return ResponseMessage.ok(rules);
+    }
+
+    @Override
     public ResponseMessage enableRulesForAllInClient(@RequestParam(value = "ruleTypes") String[] ruleTypes) {
         String clientId = RequestHelper.getClientId();
         Set<Integer> types = rulesService.validateRuleTypesForClient(clientId, ruleTypes);
@@ -100,12 +117,16 @@ public class RulesProvider implements RulesApi {
     }
 
     @Override
-    public ResponseMessage deleteRuleByDevices(@RequestParam(value = "devices") String[] devices) {
-        List<EventRuleDevice> ruleDevices = rulesService.getRuleDevice(devices);
+    public ResponseMessage deleteRuleByDevices(@RequestParam(value = "devices") String[] devices,
+                                               @RequestParam(value = "threshold1", required = false) String threshold1,
+                                               @RequestParam(value = "areaId", required = false) String areaId) {
+        List<EventRuleDevice> ruleDevices = rulesService.getRuleDevice(Arrays.asList(devices),
+                threshold1, areaId);
         if (CollUtil.isEmpty(ruleDevices)) {
             return ResponseMessage.ok("设备未关联规则");
         }
-        List<Integer> ruleIdList = ruleDevices.stream().map(EventRuleDevice::getRuleId).distinct().collect(Collectors.toList());
+        List<Integer> ruleIdList = ruleDevices.stream()
+                .map(EventRuleDevice::getRuleId).distinct().collect(Collectors.toList());
         int result = rulesService.deleteRule(devices, ruleIdList);
         if (result == 0) {
             return ResponseMessage.ok();
